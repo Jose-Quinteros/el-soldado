@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas del Soldado - Panel Central</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <h1>HERRAMIENTAS DEL SOLDADO</h1>
+            <p>Plataforma centralizada de herramientas, recursos y aplicaciones para facilitar la gestión, consulta y análisis de información.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="controls-container">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="search-input" placeholder="Buscar herramienta...">
+            </div>
+            <div class="filters-container">
+                <button class="filter-btn active" data-category="todas">TODAS</button>
+                <button class="filter-btn" data-category="analisis">ANÁLISIS</button>
+                <button class="filter-btn" data-category="consultas">CONSULTAS</button>
+                <button class="filter-btn" data-category="utilidades">UTILIDADES</button>
+                <button class="filter-btn" data-category="manual del usuario">MANUAL DEL USUARIO</button>
+                <button class="filter-btn" data-category="recursos">RECURSOS</button>
+                <button class="filter-btn" data-category="recurso-externo">GEO PORTAL</button>
+                <button class="filter-btn" data-category="gemini">GEMINI</button>
+            </div>
+        </div>
+
+        <section class="tools-grid" id="tools-grid">
+            <!-- Las tarjetas se generan dinámicamente mediante app.js -->
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Herramientas del Soldado. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

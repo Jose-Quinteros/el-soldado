@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Control de Clasificación de Eventos</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Librerías Externas para Gráficos e Informes PDF -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR DE NAVEGACIÓN -->
+        <aside class="sidebar">
+            <h2>Control</h2>
+            <nav>
+                <button class="nav-btn active" data-sec="sec-control">📝 Control de Eventos</button>
+                <button class="nav-btn" data-sec="sec-historial">📋 Historial</button>
+                <button class="nav-btn" data-sec="sec-estadisticas">📊 Estadísticas</button>
+                <button class="nav-btn" data-sec="sec-admin">⚙️ Administración</button>
+            </nav>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+
+            <!-- SECCIÓN 1: CONTROL DE EVENTOS -->
+            <section id="sec-control" class="section-content">
+                <div id="pantalla-inicio" class="card central-card">
+                    <h3>Ingreso de Evento para Control</h3>
+                    <p>Ingrese el ID del evento (7 dígitos) para comenzar o recuperar un control.</p>
+                    <div class="form-group-inline">
+                        <input type="text" id="input-id-inicio" placeholder="Ej: 1234567" maxlength="7">
+                        <button id="btn-iniciar-control" class="btn btn-primary">Iniciar / Cargar Control</button>
+                    </div>
+                    <span id="error-id-inicio" class="error-msg hidden">El ID debe contener exactamente 7 dígitos numéricos.</span>
+                </div>
+
+                <div id="panel-trabajo" class="hidden">
+                    <div class="control-header card">
+                        <div class="info-meta">
+                            <h2>Evento ID: <span id="lbl-id-evento">-</span></h2>
+                            <span class="badge-estado" id="badge-estado-control">EN CONTROL</span>
+                            <span class="fecha-meta">Creado: <span id="lbl-fecha-control">-</span></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="select-partido">Partido / Jurisdicción:</label>
+                            <select id="select-partido">
+                                <option value="">-- Seleccionar Partido --</option>
+                            </select>
+                        </div>
+                        <div class="actions-meta">
+                            <button id="btn-nuevo-control" class="btn btn-secondary">➕ Nuevo Control</button>
+                            <button id="btn-guardar-control" class="btn btn-success">💾 Guardar Control</button>
+                        </div>
+                    </div>
+
+                    <div class="control-grid">
+                        <div class="card selector-container">
+                            <div class="tabs-header-container">
+                                <div class="tabs-header" id="tabs-header"></div>
+                                <button id="btn-abrir-modal-solapa" class="btn btn-sm btn-primary" title="Agregar Nueva Solapa">➕ Solapa</button>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 50px;">Sel.</th>
+                                            <th>Código</th>
+                                            <th>Nombre del Error</th>
+                                            <th>Indicador</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-errores"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card resumen-container">
+                            <h3>Resumen de Control</h3>
+                            <p><strong>Total Errores Seleccionados:</strong> <span id="lbl-total-errores" class="badge-count">0</span></p>
+                            <ul id="lista-resumen-solapas" class="resumen-list"></ul>
+                            <hr>
+                            <div class="mensaje-header">
+                                <h4>Mensaje para Notificación</h4>
+                                <button id="btn-copiar-mensaje" class="btn btn-sm btn-info">📋 Copiar Mensaje</button>
+                            </div>
+                            <div id="contenedor-mensaje" class="mensaje-box"></div>
+                            <div class="panel-bottom-actions">
+                                <button id="btn-limpiar-errores" class="btn btn-sm btn-warning">🧹 Limpiar Selección</button>
+                                <button id="btn-imprimir-control" class="btn btn-sm btn-secondary">🖨️ Imprimir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 2: HISTORIAL -->
+            <section id="sec-historial" class="section-content hidden">
+                <div class="card">
+                    <div class="card-header-flex">
+                        <h2>Historial de Eventos Controlados</h2>
+                        <button id="btn-eliminar-historial" class="btn btn-danger btn-sm">🗑️ Vaciar Historial</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Evento</th>
+                                    <th>Partido</th>
+                                    <th>Última Actualización</th>
+                                    <th>Errores</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-historial"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 3: DASHBOARD ESTADÍSTICO & INFORMES -->
+            <section id="sec-estadisticas" class="section-content hidden">
+                <div class="card">
+                    <h2>ANÁLISIS ESTADÍSTICO DE CLASIFICACIÓN</h2>
+                    <p style="color:var(--text-muted); font-size:0.88rem; margin-top:0.25rem;">
+                        Consulte métricas individuales por partido y período o genere informes comparativos de evolución.
+                    </p>
+                </div>
+
+                <!-- MODALIDAD 1 — INFORME INDIVIDUAL -->
+                <div class="card">
+                    <div class="card-header-flex">
+                        <h3>📄 MODALIDAD 1 — INFORME INDIVIDUAL (PARTIDO + PERÍODO)</h3>
+                    </div>
+                    <div class="filter-bar">
+                        <div class="filter-group">
+                            <label for="filtro-partido">PARTIDO / JURISDICCIÓN:</label>
+                            <select id="filtro-partido"></select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filtro-preset">PERÍODO PRESET:</label>
+                            <select id="filtro-preset">
+                                <option value="TODOS">Todo el Historial</option>
+                                <option value="ESTE_MES">Este Mes</option>
+                                <option value="MES_ANTERIOR">Mes Anterior</option>
+                                <option value="ULTIMOS_3_MESES">Últimos 3 Meses</option>
+                                <option value="ULTIMOS_6_MESES">Últimos 6 Meses</option>
+                                <option value="ESTE_ANO">Este Año</option>
+                                <option value="ANO_ANTERIOR">Año Anterior</option>
+                                <option value="CUSTOM">Personalizado</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" id="grp-fechas-individual">
+                            <label for="f-fecha-desde">FECHA DESDE:</label>
+                            <input type="date" id="f-fecha-desde">
+                            <label for="f-fecha-hasta">FECHA HASTA:</label>
+                            <input type="date" id="f-fecha-hasta">
+                        </div>
+                        <button id="btn-generar-pdf-individual" class="btn btn-primary">📄 GENERAR INFORME INDIVIDUAL PDF</button>
+                    </div>
+                </div>
+
+                <!-- TARJETAS ESTADÍSTICAS INDIVIDUALES -->
+                <div class="stats-cards-grid" id="cards-estadisticas-ind"></div>
+
+                <!-- INFORMACIÓN Y DESCRIPCIÓN INDIVIDUAL -->
+                <div class="admin-grid margin-bottom-sm">
+                    <div class="card">
+                        <h4>INFORMACIÓN DEL ANÁLISIS</h4>
+                        <ul id="lista-info-analisis" class="resumen-list" style="margin-top:0.5rem;"></ul>
+                    </div>
+                    <div class="card">
+                        <h4>INFORME ESTADÍSTICO DEL PERÍODO (DESCRIPTIVO)</h4>
+                        <div id="contenedor-resumen-descriptivo-ind" class="informe-box">Seleccione un partido para visualizar el análisis.</div>
+                    </div>
+                </div>
+
+                <!-- GRÁFICOS DEL DASHBOARD INDIVIDUAL -->
+                <div class="charts-grid margin-bottom-sm">
+                    <div class="card chart-card">
+                        <h4>GRÁFICO 1 — ERRORES POR SOLAPA</h4>
+                        <div class="chart-canvas-wrapper"><canvas id="chart-ind-solapas"></canvas></div>
+                    </div>
+                    <div class="card chart-card">
+                        <h4>GRÁFICO 2 — ERRORES POR CÓDIGO (TOP FRECUENCIA)</h4>
+                        <div class="chart-canvas-wrapper"><canvas id="chart-ind-codigos"></canvas></div>
+                    </div>
+                    <div class="card chart-card">
+                        <h4>GRÁFICO 3 — EVOLUCIÓN TEMPORAL</h4>
+                        <div class="chart-canvas-wrapper"><canvas id="chart-ind-evolucion"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- TABLAS INDIVIDUALES -->
+                <div class="card margin-bottom-sm">
+                    <h4>DETALLE DE ERRORES DETECTADOS</h4>
+                    <div class="table-wrapper margin-top">
+                        <table class="data-table" id="tabla-ind-errores">
+                            <thead>
+                                <tr>
+                                    <th style="cursor:pointer;" onclick="ordenarTablaIndividual('codigo')">Código ⇕</th>
+                                    <th style="cursor:pointer;" onclick="ordenarTablaIndividual('error')">Error ⇕</th>
+                                    <th style="cursor:pointer;" onclick="ordenarTablaIndividual('solapa')">Solapa ⇕</th>
+                                    <th style="cursor:pointer;" onclick="ordenarTablaIndividual('cantidad')">Cantidad ⇕</th>
+                                    <th style="cursor:pointer;" onclick="ordenarTablaIndividual('porcentaje')">Porcentaje ⇕</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ind-errores"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card margin-bottom-sm">
+                    <h4>DISTRIBUCIÓN POR SOLAPA</h4>
+                    <div class="table-wrapper margin-top">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Solapa</th>
+                                    <th>Errores</th>
+                                    <th>Porcentaje</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ind-solapas"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card margin-bottom-sm">
+                    <div class="card-header-flex">
+                        <h4>EVENTOS ANALIZADOS EN EL PERÍODO</h4>
+                        <button id="btn-copiar-ids" class="btn btn-sm btn-info">📋 Copiar IDs Agrupados</button>
+                    </div>
+                    <div id="contenedor-ids-agrupados" class="ids-box" style="margin-bottom:1rem;">Sin eventos.</div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Evento</th>
+                                    <th>Fecha</th>
+                                    <th>Partido</th>
+                                    <th>Cantidad de Errores</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ind-eventos"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- MODALIDAD 2 — INFORME COMPARATIVO -->
+                <div class="card margin-top">
+                    <div class="card-header-flex">
+                        <h3>📊 MODALIDAD 2 — COMPARAR PERÍODOS (MISMO PARTIDO)</h3>
+                        <button id="btn-generar-pdf-comparativo" class="btn btn-secondary">📄 GENERAR COMPARATIVA PDF</button>
+                    </div>
+
+                    <div class="filter-bar" style="flex-wrap: wrap;">
+                        <div class="filter-group">
+                            <label for="comp-partido">PARTIDO:</label>
+                            <select id="comp-partido"></select>
+                        </div>
+                        <div class="filter-group">
+                            <strong>PERÍODO 1:</strong>
+                            <label>Desde:</label> <input type="date" id="comp-p1-desde">
+                            <label>Hasta:</label> <input type="date" id="comp-p1-hasta">
+                        </div>
+                        <div class="filter-group">
+                            <strong>PERÍODO 2:</strong>
+                            <label>Desde:</label> <input type="date" id="comp-p2-desde">
+                            <label>Hasta:</label> <input type="date" id="comp-p2-hasta">
+                        </div>
+                        <button id="btn-ejecutar-comparativa" class="btn btn-primary">🔎 ANALIZAR COMPARATIVA</button>
+                    </div>
+
+                    <div id="contenedor-resultados-comparativa" class="margin-top hidden">
+                        <!-- TARJETAS COMPARATIVAS KPI -->
+                        <div class="stats-cards-grid" id="cards-comparativa-kpi"></div>
+
+                        <!-- TABLA COMPARATIVA GENERAL -->
+                        <h4>DASHBOARD COMPARATIVO DE INDICADORES GENERALES</h4>
+                        <div class="table-wrapper margin-bottom-sm">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Indicador</th>
+                                        <th>Período 1</th>
+                                        <th>Período 2</th>
+                                        <th>Diferencia Absoluta (P2 - P1)</th>
+                                        <th>Variación %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-comp-generales"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- TABLA COMPARATIVA POR SOLAPA -->
+                        <h4>COMPARATIVA POR SOLAPA</h4>
+                        <div class="table-wrapper margin-bottom-sm">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Solapa</th>
+                                        <th>P1</th>
+                                        <th>P2</th>
+                                        <th>Diferencia</th>
+                                        <th>Variación %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-comp-solapas"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- TABLA COMPARATIVA POR ERROR -->
+                        <h4>COMPARATIVA POR ERROR</h4>
+                        <div class="table-wrapper margin-bottom-sm">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Error</th>
+                                        <th>P1</th>
+                                        <th>P2</th>
+                                        <th>Diferencia</th>
+                                        <th>Variación %</th>
+                                        <th>Estado Comportamiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-comp-errores"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- GRÁFICO COMPARATIVO Y RESUMEN DESCRIPTIVO -->
+                        <div class="admin-grid">
+                            <div class="card">
+                                <h4>GRÁFICO COMPARATIVO (ERRORES POR SOLAPA P1 vs P2)</h4>
+                                <div class="chart-canvas-wrapper"><canvas id="chart-comp-barras"></canvas></div>
+                            </div>
+                            <div class="card">
+                                <h4>ANÁLISIS ESTADÍSTICO COMPARATIVO (DESCRIPTIVO)</h4>
+                                <div id="comp-lectura-automatica" class="informe-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 4: ADMINISTRACIÓN -->
+            <section id="sec-admin" class="section-content hidden">
+                <div class="card margin-bottom-sm">
+                    <div class="sub-nav">
+                        <button class="sub-nav-btn active" data-sub="sub-admin-errores"> [ ERRORES ] </button>
+                        <button class="sub-nav-btn" data-sub="sub-admin-solapas"> [ SOLAPAS ] </button>
+                        <button class="sub-nav-btn" data-sub="sub-admin-partidos"> [ PARTIDOS ] </button>
+                        <button class="sub-nav-btn" data-sub="sub-admin-sistema"> [ RESPALDO SISTEMA ] </button>
+                    </div>
+                </div>
+
+                <div id="sub-admin-errores" class="sub-section-content">
+                    <div class="admin-grid">
+                        <div class="card">
+                            <h3 id="titulo-form-admin">ADMINISTRAR ERRORES</h3>
+                            <form id="form-error">
+                                <input type="hidden" id="admin-error-index" value="-1">
+                                <div class="form-group">
+                                    <label for="admin-solapa">Solapa / Categoría:</label>
+                                    <select id="admin-solapa" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-codigo">Código de Error (ID):</label>
+                                    <input type="text" id="admin-codigo" placeholder="Ej: LUG-007" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-nombre">Nombre Descriptivo:</label>
+                                    <input type="text" id="admin-nombre" placeholder="Ej: Error en Altura de Calle" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-indicador">Indicador / Encabezado:</label>
+                                    <input type="text" id="admin-indicador" placeholder="Ej: ALTURA DE CALLE INCORRECTA">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-mensaje">Mensaje Técnico:</label>
+                                    <textarea id="admin-mensaje" rows="4" placeholder="Texto descriptivo..." required></textarea>
+                                </div>
+                                <div class="form-actions-admin">
+                                    <button type="submit" id="btn-guardar-admin-error" class="btn btn-primary">➕ AGREGAR ERROR</button>
+                                    <button type="button" id="btn-cancelar-admin-error" class="btn btn-secondary hidden">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header-flex">
+                                <h3>Catálogo de Errores</h3>
+                                <div class="btn-group">
+                                    <button id="btn-exportar-errores" class="btn btn-sm btn-secondary">💾 Exportar JSON</button>
+                                    <label for="input-importar-errores" class="btn btn-sm btn-info" style="cursor:pointer; margin:0;">📥 Importar JSON</label>
+                                    <input type="file" id="input-importar-errores" accept=".json" class="hidden">
+                                    <button id="btn-restaurar-errores" class="btn btn-sm btn-warning">🔄 Restaurar Errores Predeterminados</button>
+                                    <button id="btn-restaurar-eliminados" class="btn btn-sm btn-secondary">🔄 Restaurar Errores Eliminados</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="buscar-error" placeholder="🔍 Buscar error...">
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Solapa</th>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-cat-errores"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sub-admin-solapas" class="sub-section-content hidden">
+                    <div class="admin-grid">
+                        <div class="card">
+                            <h3 id="titulo-form-solapa">ADMINISTRAR SOLAPAS</h3>
+                            <form id="form-solapa">
+                                <input type="hidden" id="admin-solapa-index" value="-1">
+                                <div class="form-group">
+                                    <label for="admin-solapa-nombre">Nombre de la Solapa:</label>
+                                    <input type="text" id="admin-solapa-nombre" placeholder="Ej: Documentación" required>
+                                </div>
+                                <div class="form-actions-admin">
+                                    <button type="submit" id="btn-guardar-admin-solapa" class="btn btn-primary">➕ AGREGAR SOLAPA</button>
+                                    <button type="button" id="btn-cancelar-admin-solapa" class="btn btn-secondary hidden">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header-flex">
+                                <h3>Gestión de Solapas / Categorías</h3>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
+                                            <th>Errores Asociados</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-admin-solapas"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sub-admin-partidos" class="sub-section-content hidden">
+                    <div class="admin-grid">
+                        <div class="card">
+                            <h3 id="titulo-form-partido">ADMINISTRAR PARTIDOS — PROVINCIA DE BUENOS AIRES</h3>
+                            <form id="form-partido">
+                                <input type="hidden" id="admin-partido-index" value="-1">
+                                <div class="form-group">
+                                    <label for="admin-partido-nombre">Nombre del Partido (PBA):</label>
+                                    <input type="text" id="admin-partido-nombre" placeholder="Ej: San Fernando" required>
+                                </div>
+                                <div class="form-actions-admin">
+                                    <button type="submit" id="btn-guardar-admin-partido" class="btn btn-primary">➕ AGREGAR PARTIDO</button>
+                                    <button type="button" id="btn-cancelar-admin-partido" class="btn btn-secondary hidden">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header-flex">
+                                <h3>Partidos de la Provincia de Buenos Aires</h3>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="buscar-partido" placeholder="🔍 Buscar partido...">
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-admin-partidos"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sub-admin-sistema" class="sub-section-content hidden">
+                    <div class="card">
+                        <h3>📦 Copia de Seguridad Completa (Backup & Restore)</h3>
+                        <p>Exporte o importe toda la configuración e historial del sistema.</p>
+                        <br>
+                        <div class="btn-group">
+                            <button id="btn-exportar-todo" class="btn btn-primary">💾 Exportar Datos Completos (.json)</button>
+                            <label for="input-importar-todo" class="btn btn-info" style="cursor:pointer; margin:0;">📥 Importar Datos Completos (.json)</label>
+                            <input type="file" id="input-importar-todo" accept=".json" class="hidden">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL NUEVA SOLAPA -->
+    <div id="modal-solapa" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>Agregar Nueva Solapa</h3>
+            <p>Ingrese el nombre de la nueva categoría o solapa:</p>
+            <div class="form-group">
+                <input type="text" id="input-nueva-solapa" placeholder="Ej: Vehículos Pesados">
+            </div>
+            <div class="modal-actions">
+                <button id="btn-guardar-solapa" class="btn btn-primary">Guardar Solapa</button>
+                <button id="btn-cerrar-modal-solapa" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL IMPORTACIÓN -->
+    <div id="modal-importar" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>📥 Importar Configuración</h3>
+            <p>Seleccione cómo desea procesar la configuración importada:</p>
+            <div class="modal-actions" style="flex-direction: column; gap: 0.5rem;">
+                <button id="btn-import-combinar" class="btn btn-primary">🔀 COMBINAR (Recomendado)</button>
+                <button id="btn-import-reemplazar" class="btn btn-danger">⚠️ REEMPLAZAR TODO</button>
+                <button id="btn-import-cancelar" class="btn btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

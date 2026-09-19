@@ -1,0 +1,29 @@
+herramientas-del-soldado/
+│
+├── index.html
+│
+├── css/
+│   └── style.css
+│
+├── js/
+│   └── app.js
+│
+├── assets/
+│   ├── img/
+│   └── icons/
+│
+├── paginas/
+│   │
+│   ├── analisis-criminal/
+│   │   └── index.html
+│   │
+│   ├── consultas/
+│   │   └── index.html
+│   │
+│   ├── utilidades/
+│   │   └── index.html
+│   │
+│   └── recursos/
+│       └── index.html
+│
+└── README.md

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistente del Soldado</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-content">
+      <div class="shield-icon" aria-hidden="true">🛡️</div>
+      <div>
+        <h1>ASISTENTE DEL SOLDADO</h1>
+        <p class="subtitle">Herramienta de Procesamiento y Desduplicación de Eventos</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+    
+    <!-- ENTRADA DE DATOS -->
+    <form id="analysis-form" novalidate>
+      
+      <section class="card">
+        <h2 class="section-title">SECCIÓN A — IDENTIFICACIÓN DE EVENTOS Y PROCEDENCIA</h2>
+        
+        <!-- EVENTO 1 -->
+        <div class="event-box">
+          <h3 class="event-sub-title">📌 Evento 1 (Evento a Mantener / Principal)</h3>
+          <div class="grid-3-cols">
+            <div class="form-group" id="group-id1">
+              <label for="id-evento-1">ID EVENTO 1 <span class="required">*</span></label>
+              <input type="text" id="id-evento-1" name="idEvento1" placeholder="Ej: 4148989" maxlength="7" autocomplete="off">
+              <span class="error-message" id="error-id-evento-1"></span>
+            </div>
+
+            <div class="form-group" id="group-ipp1">
+              <label for="ipp-evento-1">IPP EVENTO 1 <span class="required">*</span></label>
+              <input type="text" id="ipp-evento-1" name="ippEvento1" placeholder="PP-13-00-028489-26/00" autocomplete="off">
+              <span class="error-message" id="error-ipp-evento-1"></span>
+            </div>
+
+            <div class="form-group" id="group-lugar1">
+              <label for="lugar-evento-1">FISCALÍA / UFI / DEPENDENCIA <span class="required">*</span></label>
+              <input type="text" id="lugar-evento-1" name="lugarEvento1" placeholder="Ej: UFI Nº 2 Quilmes" autocomplete="off">
+              <span class="error-message" id="error-lugar-evento-1"></span>
+            </div>
+          </div>
+
+          <div class="grid-3-cols margin-top-sm">
+            <div class="form-group" id="group-partido1">
+              <label for="partido-evento-1">PARTIDO (PBA) <span class="required">*</span></label>
+              <input type="text" id="partido-evento-1" name="partidoEvento1" placeholder="Ej: Quilmes" autocomplete="off">
+              <span class="error-message" id="error-partido-evento-1"></span>
+            </div>
+
+            <div class="form-group" id="group-delito1">
+              <label for="delito-evento-1">DELITOCOP / CARÁTULA <span class="required">*</span></label>
+              <input type="text" id="delito-evento-1" name="delitoEvento1" placeholder="Ej: Robo calificado" autocomplete="off">
+              <span class="error-message" id="error-delito-evento-1"></span>
+            </div>
+
+            <div class="form-group" id="group-fecha1">
+              <label for="fecha-evento-1">FECHA DEL HECHO <span class="required">*</span></label>
+              <input type="date" id="fecha-evento-1" name="fechaEvento1">
+              <span class="error-message" id="error-fecha-evento-1"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EVENTO 2 -->
+        <div class="event-box margin-top-md">
+          <h3 class="event-sub-title">📌 Evento 2 (Evento a Sacar de Línea / Duplicado)</h3>
+          <div class="grid-3-cols">
+            <div class="form-group" id="group-id2">
+              <label for="id-evento-2">ID EVENTO 2 <span class="required">*</span></label>
+              <input type="text" id="id-evento-2" name="idEvento2" placeholder="Ej: 4147224" maxlength="7" autocomplete="off">
+              <span class="error-message" id="error-id-evento-2"></span>
+            </div>
+
+            <div class="form-group" id="group-ipp2">
+              <label for="ipp-evento-2">IPP EVENTO 2 <span class="required">*</span></label>
+              <input type="text" id="ipp-evento-2" name="ippEvento2" placeholder="PP-13-00-028489-26/00" autocomplete="off">
+              <span class="error-message" id="error-ipp-evento-2"></span>
+            </div>
+
+            <div class="form-group" id="group-lugar2">
+              <label for="lugar-evento-2">FISCALÍA / UFI / DEPENDENCIA <span class="required">*</span></label>
+              <input type="text" id="lugar-evento-2" name="lugarEvento2" placeholder="Ej: FRPJ Nº 2 Quilmes" autocomplete="off">
+              <span class="error-message" id="error-lugar-evento-2"></span>
+            </div>
+          </div>
+
+          <div class="grid-3-cols margin-top-sm">
+            <div class="form-group" id="group-partido2">
+              <label for="partido-evento-2">PARTIDO (PBA) <span class="required">*</span></label>
+              <input type="text" id="partido-evento-2" name="partidoEvento2" placeholder="Ej: Quilmes" autocomplete="off">
+              <span class="error-message" id="error-partido-evento-2"></span>
+            </div>
+
+            <div class="form-group" id="group-delito2">
+              <label for="delito-evento-2">DELITOCOP / CARÁTULA <span class="required">*</span></label>
+              <input type="text" id="delito-evento-2" name="delitoEvento2" placeholder="Ej: Robo calificado" autocomplete="off">
+              <span class="error-message" id="error-delito-evento-2"></span>
+            </div>
+
+            <div class="form-group" id="group-fecha2">
+              <label for="fecha-evento-2">FECHA DEL HECHO <span class="required">*</span></label>
+              <input type="date" id="fecha-evento-2" name="fechaEvento2">
+              <span class="error-message" id="error-fecha-evento-2"></span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- BOTÓN PRINCIPAL -->
+      <div class="actions-container">
+        <button type="submit" id="btn-generate" class="btn btn-primary">
+          ⚙️ VALIDAR Y FINALIZAR
+        </button>
+      </div>
+
+    </form>
+
+    <!-- CUADRO DE VISTA PREVIA / RESULTADO SIEMPRE VISIBLE -->
+    <section id="result-section" class="card result-card" aria-live="polite">
+      <h2 class="section-title">VISTA PREVIA DEL MENSAJE GENERADO</h2>
+      
+      <div class="output-wrapper">
+        <pre id="output-message" class="message-display"></pre>
+      </div>
+
+      <div class="result-actions">
+        <button type="button" id="btn-copy" class="btn btn-secondary">
+          📋 COPIAR MENSAJE
+        </button>
+        <button type="button" id="btn-reset" class="btn btn-outline">
+          🔄 NUEVO ANÁLISIS
+        </button>
+      </div>
+
+      <div id="toast" class="toast hidden" role="status">
+        ✓ Mensaje copiado al portapapeles
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <p>Procesamiento local seguro — Ningún dato es transmitido ni almacenado en servidores externos.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

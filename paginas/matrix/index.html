@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DE SOLDADO A GENERAL</title>
+
+  <!-- Fuente tipográfica tecnológica y militar desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Canvas de fondo para la lluvia digital en tiempo real -->
+  <canvas id="matrixCanvas"></canvas>
+
+  <!-- Overlay sutil de viñeta para dar profundidad visual -->
+  <div class="vignette-overlay"></div>
+
+  <!-- SECCIÓN 1: PANTALLA DE INICIO (HERO) -->
+  <section id="heroSection" class="screen-section active">
+    <div class="hero-content">
+      <h1 class="main-title" data-text="DE SOLDADO A GENERAL">DE SOLDADO A GENERAL</h1>
+      <p class="hero-subtitle">SISTEMA DE TÁCTICA Y ESTRATEGIA DIGITAL</p>
+      
+      <button id="enterBtn" class="cyber-button">
+        <span class="btn-text">INGRESAR</span>
+        <span class="btn-glitch"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 2: PLATAFORMA DE FORMACIÓN -->
+  <section id="platformSection" class="screen-section hidden">
+    <header class="platform-header">
+      <h2 class="platform-title">DE SOLDADO A GENERAL</h2>
+      <p class="platform-subtitle">Plataforma de formación y desarrollo</p>
+    </header>
+
+    <main class="platform-container">
+      <div class="dashboard-grid">
+        <article class="module-card">
+          <div class="card-status">ESTADO: ACTIVO</div>
+          <h3 class="card-title">01. TÁCTICAS BÁSICAS</h3>
+          <p class="card-desc">Fundamentos de disciplina, respuesta rápida y ejecución operacional en el terreno digital.</p>
+          <button class="card-btn">ACCEDER A MÓDULO</button>
+        </article>
+
+        <article class="module-card">
+          <div class="card-status">ESTADO: RESTRINGIDO</div>
+          <h3 class="card-title">02. INTELIGENCIA Y ESTRATEGIA</h3>
+          <p class="card-desc">Análisis de datos, mitigación de riesgos y planificación de operaciones complejas.</p>
+          <button class="card-btn">ACCEDER A MÓDULO</button>
+        </article>
+
+        <article class="module-card">
+          <div class="card-status">ESTADO: EN DESARROLLO</div>
+          <h3 class="card-title">03. COMANDO GENERAL</h3>
+          <p class="card-desc">Toma de decisiones de alto nivel, liderazgo de equipos y dirección estratégica avanzada.</p>
+          <button class="card-btn">ACCEDER A MÓDULO</button>
+        </article>
+      </div>
+    </main>
+
+    <footer class="platform-footer">
+      <button id="backBtn" class="cyber-button-subtle">VOLVER AL INICIO</button>
+    </footer>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
