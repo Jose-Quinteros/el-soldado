@@ -1,6 +1,6 @@
 /**
- * SISTEMA DE CONTROL DE CLASIFICACIÓN DE EVENTOS CON DASHBOARD ESTADÍSTICO,
- * ANALIZADOR AUTOMÁTICO DE RELATOS CON IA E INFORMES PDF MULTIPÁGINA
+ * SISTEMA DE CONTROL DE CLASIFICACIÓN DE EVENTOS CON DASHBOARD ESTADÍSTICO
+ * E INFORMES PDF MULTIPÁGINA
  */
 
 // ==========================================================================
@@ -229,6 +229,28 @@ function inicializarUI() {
 }
 
 function vincularEventos() {
+    // --- NAVEGACIÓN LATERAL (SIDEBAR COLAPSABLE & HAMBURGUESA) ---
+    const sidebar = document.getElementById("sidebar");
+    const btnToggle = document.getElementById("btn-toggle-sidebar");
+    const btnClose = document.getElementById("btn-close-sidebar");
+
+    btnToggle.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+    });
+
+    if (btnClose) {
+        btnClose.addEventListener("click", () => {
+            sidebar.classList.add("collapsed");
+        });
+    }
+
+    // Ocultar el menú lateral al hacer clic fuera de él
+    document.addEventListener("click", (e) => {
+        if (!sidebar.contains(e.target) && !btnToggle.contains(e.target) && !sidebar.classList.contains("collapsed")) {
+            sidebar.classList.add("collapsed");
+        }
+    });
+
     document.querySelectorAll(".nav-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const secId = e.currentTarget.getAttribute("data-sec");
@@ -242,6 +264,9 @@ function vincularEventos() {
             } else {
                 cambiarSeccion(secId, targetBtn);
             }
+
+            // Ocultar sidebar al seleccionar una sección
+            sidebar.classList.add("collapsed");
         });
     });
 
@@ -278,9 +303,6 @@ function vincularEventos() {
     document.getElementById("btn-copiar-mensaje").addEventListener("click", copiarMensaje);
     document.getElementById("btn-guardar-control").addEventListener("click", guardarControl);
     document.getElementById("btn-imprimir-control").addEventListener("click", () => window.print());
-
-    // Analizador de Relato IA
-    //document.getElementById("btn-analizar-relato").addEventListener("click", analizarRelatoAutomatizadoIA);
 
     // Solapas Modal
     document.getElementById("btn-abrir-modal-solapa").addEventListener("click", abrirModalSolapa);
@@ -832,101 +854,9 @@ function copiarMensaje() {
     const text = document.getElementById("contenedor-mensaje").textContent;
     navigator.clipboard.writeText(text).then(() => mostrarToast("¡Mensaje copiado al portapapeles!"));
 }
-/*
+
 // ==========================================================================
-// 7. ANALIZADOR DE RELATO CON LÓGICA DE PROCESAMIENTO AUTOMÁTICO (NLP)
-// ==========================================================================
-function analizarRelatoAutomatizadoIA() {
-    const texto = document.getElementById("textarea-relato").value.trim();
-
-    if (!texto) {
-        mostrarToast("Ingrese un relato para realizar el análisis.");
-        return;
-    }
-
-    // 1. DELITO
-    let delito = "Sin Especificar / En Investigación";
-    if (/robo/i.test(texto)) delito = "Robo";
-    else if (/hurto/i.test(texto)) delito = "Hurto";
-    else if (/lesion/i.test(texto)) delito = "Lesiones";
-    else if (/homicidio/i.test(texto) || /asesin/i.test(texto)) delito = "Homicidio";
-    else if (/estafa/i.test(texto) || /defraud/i.test(texto)) delito = "Estafa / Defraudación";
-    else if (/amenaza/i.test(texto)) delito = "Amenazas";
-
-    // 2. LUGAR DEL HECHO
-    let lugar = "No precisado en el texto";
-    const regexLugar = /(?:en\s+calle|en\s+la\s+intersecci[oó]n\s+de|calle|av\.|avenida)\s+([A-Z0-9\s°ºyY\.\,\-]+?)(?=\,|\.|\selemento|\sv[ií]ctima|\sque|\sel\sd[ií]a|$)/i;
-    const matchLugar = texto.match(regexLugar);
-    if (matchLugar) {
-        lugar = matchLugar[0].trim();
-    }
-
-    // 3. FECHA Y HORA
-    let fechaHora = "Sin fecha ni hora explícita";
-    const regexFecha = /\b(?:\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{1,2}\s+de\s+[a-z]+\s+de\s+\d{4})\b/i;
-    const regexHora = /\b(?:\d{1,2}[:\.]\d{2}\s*(?:hs|horas)?|\d{1,2}\s*(?:hs|horas))\b/i;
-    const mFecha = texto.match(regexFecha);
-    const mHora = texto.match(regexHora);
-
-    if (mFecha || mHora) {
-        fechaHora = `${mFecha ? mFecha[0] : 'Fecha no informada'} — ${mHora ? mHora[0] : 'Hora no informada'}`;
-    }
-
-    // 4. VÍCTIMA (Nombre y Edad)
-    let victima = "No identificada";
-    const regexVictima = /(?:v[ií]ctima|denunciante)\s+(?:identificada\s+como\s+)?([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/i;
-    const regexEdadVic = /(?:v[ií]ctima|denunciante|[A-Z][a-z]+\s+[A-Z][a-z]+)[^\.]*?(\d{1,2})\s*a[ñn]os/i;
-    const mVic = texto.match(regexVictima);
-    const mEdadVic = texto.match(regexEdadVic);
-
-    if (mVic) {
-        victima = `${mVic[1]} (${mEdadVic ? mEdadVic[1] + ' años' : 'Edad sin datos'})`;
-    } else {
-        victima = "NN Víctima";
-    }
-
-    // 5. IMPUTADO / DENUNCIADO
-    let imputado = "";
-    const regexImp = /(?:imputado|denunciado|autor|sindicado)\s+(?:identificado\s+como\s+)?([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)/i;
-    const regexEdadImp = /(?:imputado|denunciado|autor)[^\.]*?(\d{1,2})\s*a[ñn]os/i;
-    const mImp = texto.match(regexImp);
-    const mEdadImp = texto.match(regexEdadImp);
-
-    if (mImp) {
-        imputado = `${mImp[1]} (${mEdadImp ? mEdadImp[1] + ' años' : 'Edad sin datos'})`;
-    } else {
-        // Reglas de asignación para personas sin datos explícitos
-        let genero = /femenina|mujer|sujeta/i.test(texto) ? "Femenino" : "Masculino";
-        let condicionEdad = "mayor o menor de edad";
-        if (/menor/i.test(texto)) condicionEdad = "menor de edad";
-        else if (/mayor/i.test(texto)) condicionEdad = "mayor de edad";
-
-        imputado = `NN ${genero} (${condicionEdad})`;
-    }
-
-    // 6. MODALIDADES
-    let mods = [];
-    if (/arma\s+de\s+fuego/i.test(texto)) mods.push("Uso de Arma de Fuego");
-    if (/arma\s+blanca|cuchillo/i.test(texto)) mods.push("Uso de Arma Blanca");
-    if (/moto|motoveh[ií]culo/i.test(texto)) mods.push("Motochorro / Con Rodado");
-    if (/violencia|intimidaci[oó]n/i.test(texto)) mods.push("Violencia sobre las personas");
-    if (/efracci[oó]n|rotura/i.test(texto)) mods.push("Efracción");
-
-    const modalidadStr = mods.length > 0 ? mods.join(", ") : "Modalidad no especificada";
-
-    // DESPLIEGUE EN INTERFAZ
-    document.getElementById("res-delito").textContent = delito;
-    document.getElementById("res-lugar").textContent = lugar;
-    document.getElementById("res-fechahora").textContent = fechaHora;
-    document.getElementById("res-victima").textContent = victima;
-    document.getElementById("res-imputado").textContent = imputado;
-    document.getElementById("res-modalidades").textContent = modalidadStr;
-
-    mostrarToast("✅ Relato analizado correctamente.");
-}
-*/
-// ==========================================================================
-// 8. HISTORIAL DE CONTROLES
+// 7. HISTORIAL DE CONTROLES
 // ==========================================================================
 function renderizarHistorial() {
     const tbody = document.getElementById("tbody-historial");
@@ -981,7 +911,7 @@ function eliminarHistorial() {
 }
 
 // ==========================================================================
-// 9. CÁLCULO Y FILTRADO POR PARTIDO + PERÍODO
+// 8. CÁLCULO Y FILTRADO POR PARTIDO + PERÍODO
 // ==========================================================================
 function resolverRangoFechas(preset, fDesdeRaw, fHastaRaw) {
     const ahora = new Date();
@@ -1119,7 +1049,7 @@ function calcularEvolucionTemporal(controles) {
 }
 
 // ==========================================================================
-// 10. DASHBOARD INDIVIDUAL & EVALUACIÓN DE GRAVEDAD E IMPACTO
+// 9. DASHBOARD INDIVIDUAL & EVALUACIÓN DE GRAVEDAD E IMPACTO
 // ==========================================================================
 function actualizarDashboardIndividual() {
     const partido = document.getElementById("filtro-partido").value;
@@ -1262,7 +1192,7 @@ function generarTextoDescriptivoFormal(partido, preset, dStart, dEnd, stats) {
 }
 
 // ==========================================================================
-// 11. GENERACIÓN Y MANEJO DE GRÁFICOS (CHART.JS)
+// 10. GENERACIÓN Y MANEJO DE GRÁFICOS (CHART.JS)
 // ==========================================================================
 function limpiarGraficosIndividuales() {
     if (chartIndSolapasInstance) { chartIndSolapasInstance.destroy(); chartIndSolapasInstance = null; }
@@ -1325,7 +1255,7 @@ function actualizarGraficosIndividuales(stats, controles) {
 }
 
 // ==========================================================================
-// 12. TABLAS Y ORDENAMIENTO DE DATOS
+// 11. TABLAS Y ORDENAMIENTO DE DATOS
 // ==========================================================================
 function ordenarTablaIndividual(columna) {
     if (ordenTablaInd.columna === columna) {
@@ -1440,7 +1370,7 @@ function renderizarTablaIndividualEventos(controles) {
 }
 
 // ==========================================================================
-// 13. GENERACIÓN DEL INFORME INDIVIDUAL PDF
+// 12. GENERACIÓN DEL INFORME INDIVIDUAL PDF
 // ==========================================================================
 function generarInformePDFIndividual() {
     const partido = document.getElementById("filtro-partido").value;
@@ -1647,7 +1577,7 @@ function generarInformePDFIndividual() {
 }
 
 // ==========================================================================
-// 14. MÓDULO COMPARATIVO
+// 13. MÓDULO COMPARATIVO
 // ==========================================================================
 function analizarComparativa() {
     const partido = document.getElementById("comp-partido").value;
@@ -1948,7 +1878,7 @@ function generarComparativaPDF() {
 }
 
 // ==========================================================================
-// 15. ADMINISTRADOR DE ERRORES (CRUD) Y SUGERENCIA DE CÓDIGO
+// 14. ADMINISTRADOR DE ERRORES (CRUD) Y SUGERENCIA DE CÓDIGO
 // ==========================================================================
 function sugerirCodigoError() {
     const solapa = document.getElementById("admin-solapa").value;
@@ -2128,7 +2058,7 @@ function restaurarErroresEliminados() {
 }
 
 // ==========================================================================
-// 16. ADMINISTRACIÓN DE PARTIDOS (PBA)
+// 15. ADMINISTRACIÓN DE PARTIDOS (PBA)
 // ==========================================================================
 function renderizarPartidosAdmin() {
     const tbody = document.getElementById("tbody-admin-partidos");
@@ -2218,7 +2148,7 @@ function eliminarPartido(index) {
 }
 
 // ==========================================================================
-// 17. EXPORTACIÓN E IMPORTACIÓN DE DATOS (JSON)
+// 16. EXPORTACIÓN E IMPORTACIÓN DE DATOS (JSON)
 // ==========================================================================
 function exportarConfiguracionJSON() {
     const exportData = {
@@ -2329,7 +2259,7 @@ function procesarImportacion(modo) {
 }
 
 // ==========================================================================
-// 18. FUNCIONES AUXILIARES
+// 17. FUNCIONES AUXILIARES
 // ==========================================================================
 function formatearFechaMostrar(isoString) {
     if (!isoString) return "-";
