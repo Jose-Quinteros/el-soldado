@@ -56,7 +56,7 @@ const SOLAPAS_PREDETERMINADAS = [
 ];
 
 const PARTIDOS_PREDETERMINADOS = [
-    "Almirante BrXwn", "Avellaneda", "Berazategui", "Berisso", "Ensenada",
+    "Almirante Brown", "Avellaneda", "Berazategui", "Berisso", "Ensenada",
     "Escobar", "Esteban Echeverría", "Ezeiza", "Florencio Varela", "San Martín",
     "Hurlingham", "Ituzaingó", "José C. Paz", "La Matanza", "La Plata", 
     "Lanús", "Lomas de Zamora", "Malvinas Argentinas", "Merlo", "Moreno", 
