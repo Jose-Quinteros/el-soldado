@@ -56,9 +56,12 @@ const SOLAPAS_PREDETERMINADAS = [
 ];
 
 const PARTIDOS_PREDETERMINADOS = [
-    "La Plata", "Quilmes", "Lomas de Zamora", "Esteban Echeverría", "Almirante Brown",
-    "Avellaneda", "Lanús", "Florencio Varela", "Berazategui", "Moreno",
-    "Merlo", "Morón", "San Martín", "San Isidro", "Tigre"
+    "Almirante BrXwn", "Avellaneda", "Berazategui", "Berisso", "Ensenada",
+    "Escobar", "Esteban Echeverría", "Ezeiza", "Florencio Varela", "San Martín",
+    "Hurlingham", "Ituzaingó", "José C. Paz", "La Matanza", "La Plata", 
+    "Lanús", "Lomas de Zamora", "Malvinas Argentinas", "Merlo", "Moreno", 
+    "Morón", "Pilar", "Quilmes", "San Fernando", "San Isidro", 
+    "San Miguel", "Tigre", "Tres de Febrero", "Vicente López"
 ].map((nombre, i) => ({ id: `par-${i + 1}`, nombre, tipo: "SISTEMA" }));
 
 const PARTIDOS_OFICIALES_PBA = [
