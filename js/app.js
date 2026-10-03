@@ -62,11 +62,21 @@ const herramientas = [
     {
         id: "recurso-gemini",
         nombre: "Buscador IA",
-        descripcion: "Acceso seguro a plataforma Gemina IA.",
+        descripcion: "Acceso seguro a plataforma Gemini IA.",
         icono: "🌐",
         url: "https://gemini.google.com/app",
         tipo: "externo",
         categoria: "gemini",
+        nuevaPestana: true
+    },
+   {
+        id: "recurso-gemini",
+        nombre: "Buscador IA",
+        descripcion: "Acceso seguro a plataforma ChatGpt IA.",
+        icono: "🌐",
+        url: "https://chatgpt.com/",
+        tipo: "externo",
+        categoria: "Chatgpt",
         nuevaPestana: true
     }
 ];
