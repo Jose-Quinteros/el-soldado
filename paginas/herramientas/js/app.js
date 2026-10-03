@@ -28,7 +28,7 @@ const herramientas = [
         icono: "📊 ",
         url: "grafico-analitico/grafico-analitico.html", 
         tipo: "interno",
-        categoria: "utilidades"
+        categoria: "graficos"
     },
     {
         id: "recursos",
