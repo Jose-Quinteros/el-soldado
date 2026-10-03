@@ -26,7 +26,7 @@ const herramientas = [
         nombre: "Graficos",
         descripcion: "Evaluación automática basada en patrones, tendencias y comportamiento real de los datos. Agrega o elimina variables libremente.",
         icono: "📊 ",
-        url: "herramientas/grafico-analitico/grafico-analitico.html",
+        url: "grafico-analitico/grafico-analitico.html",
         tipo: "interno",
         categoria: "graficos"
     },
