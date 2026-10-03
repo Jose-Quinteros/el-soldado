@@ -22,11 +22,11 @@ const herramientas = [
         categoria: "consultas"
     },
     {
-        id: "utilidades",
-        nombre: "Utilidades",
-        descripcion: "Conjunto de utilidades de apoyo operativo, conversores y herramientas auxiliares.",
-        icono: "🛠️",
-        url: "paginas/utilidades/index.html",
+        id: "graficos",
+        nombre: "Graficos",
+        descripcion: "Evaluación automática basada en patrones, tendencias y comportamiento real de los datos. Agrega o elimina variables libremente.",
+        icono: "📊 ",
+        url: "grafico-analitico/grafico-analitico.html", 
         tipo: "interno",
         categoria: "utilidades"
     },
