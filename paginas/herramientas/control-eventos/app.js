@@ -29,11 +29,15 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-car-003", id: "CAR-003", solapa: "Carátula", nombre: "Inconsistencia en el Estado de Consumación", indicador: "GRADO DE TENTATIVA O CONSUMADO", mensaje: "El hecho se clasificó como 'Tentativa' pero se declararon bienes o elementos efectivamente apoderados/sustraídos (o viceversa).", tipo: "SISTEMA" },
     { uuid: "sys-car-004", id: "CAR-004", solapa: "Carátula", nombre: "Omisión de Caratula según se verifica en el Relato", indicador: "OMISIÓN DE CARATULA", mensaje: "El hecho no presenta caratula de correlación", tipo: "SISTEMA" },
  
-    { uuid: "sys-mod-001", id: "MOD-001", solapa: "Modalidad", nombre: "Falta Modalidad", indicador: "MODALIDAD FALTANTE", mensaje: "No se están clasificando las modalidades correspondientes al evento.", tipo: "SISTEMA" },
+    { uuid: "sys-mod-001", id: "MOD-001", solapa: "Modalidad", nombre: "Omisión o Descalificación del Medio o Táctica Utilizada", indicador: "MÉTODO / TÁCTICA DELICTIVA", mensaje: "No se registró la modalidad específica del hecho (ej. Arrebato, Rompepuertas, Piratería de asfalto, Ciberdelito) impidiendo la categorización del patrón criminal.", tipo: "SISTEMA" },
     { uuid: "sys-mod-002", id: "MOD-002", solapa: "Modalidad", nombre: "Modalidad Incorrecta", indicador: "MODALIDAD INCORRECTA", mensaje: "Se están verificando modalidades fuera del contexto del evento.", tipo: "SISTEMA" },
     { uuid: "sys-mod-003", id: "MOD-003", solapa: "Modalidad", nombre: "Control Modalidades", indicador: "CONTROL MODALIDADES", mensaje: "Se verifica que el evento no posee la modalidad que le corresponde.", tipo: "SISTEMA" },
+    { uuid: "sys-mod-004", id: "MOD-004", solapa: "Modalidad", nombre: "Incompatibilidad entre Modus Operandi y Entorno del Lugar", indicador: "MODALIDAD VS LUGAR DE OCURRENCIA", mensaje: "Se registró una modalidad exclusiva de interiores/inmuebles (ej. Escruche o Entradera) en un evento geolocalizado y categorizado strictly en 'Vía pública'.", tipo: "SISTEMA" },
+    { uuid: "sys-mod-005", id: "MOD-005", solapa: "Modalidad", nombre: "Incongruencia entre Modalidad Seleccionada y Relato", indicador: "MODALIDAD VS NARRATIVA", mensaje: "La modalidad registrada presenta inconsistencias o contradicciones evidentes con la mecánica del hecho descrita en la narrativa.", tipo: "SISTEMA" },
+    { uuid: "sys-mod-006", id: "MOD-006", solapa: "Modalidad", nombre: "Omisión de Clasificación para Índice de Vulnerabilidad Barrial", indicador: "CLASIFICACIÓN DE VULNERABILIDAD BARRIAL", mensaje: "Se desconoce la tipificación requerida por el Índice de Vulnerabilidad Barrial, omitiendo la modalidad específica necesaria para dicho análisis.", tipo: "SISTEMA" },
+    { uuid: "sys-mod-007", id: "MOD-007", solapa: "Modalidad", nombre: "Asignación Ilógica de Modalidad Oportunista", indicador: "MODALIDAD OPORTUNISTA / NATURALEZA DEL HECHO", mensaje: "Se registró una modalidad oportunista de forma arbitraria o sin sustento lógico, alterando la naturaleza real del evento y distorsionando el análisis delictivo.", tipo: "SISTEMA" },
+    { uuid: "sys-mod-008", id: "MOD-008", solapa: "Modalidad", nombre: "Uso Abusivo e Injustificado de 'Sin Modalidad Específica'", indicador: "ABUSO DE CATEGORÍA GENÉRICA / INDETERMINADA", mensaje: "Se seleccionó 'Sin Modalidad Específica' habiendo datos concretos en el relato para clasificar la táctica delictiva, perdiendo información crítica para el análisis.", tipo: "SISTEMA" },
 
-    { uuid: "sys-med-001", id: "MED-001", solapa: "Medio Empleado", nombre: "Medio Empleado", indicador: "MEDIO EMPLEADO", mensaje: "El medio empleado no corresponde al evento.", tipo: "SISTEMA" },
     { uuid: "sys-med-002", id: "MED-002", solapa: "Medio Empleado", nombre: "Control Medio Empleado / Delitocop", indicador: "DELITOCOP / MEDIO EMPLEADO", mensaje: "El medio empleado no corresponde al evento o el Delitocop no corresponde.", tipo: "SISTEMA" },
 
     { uuid: "sys-rod-001", id: "ROD-001", solapa: "Rodados", nombre: "Automotores Mal Clasificados", indicador: "AUTOMOTORES", mensaje: "Verificar automotores que no corresponden o a los que les faltan datos.", tipo: "SISTEMA" },
@@ -77,12 +81,14 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-arm-001", id: "ARM-001", solapa: "Armas", nombre: "Omisión de Atributos Técnicos del Arma Secuestrada", indicador: "TIPO, CALIBRE Y ROL DEL ARMA", mensaje: "Se declaró el secuestro de un arma pero no se clasificaron sus datos básicos (tipo, calibre, aptitud para el disparo o rol en el hecho).", tipo: "SISTEMA" },
     { uuid: "sys-arm-002", id: "ARM-002", solapa: "Armas", nombre: "Incongruencia entre Tipo de Arma y Calibre según Relato", indicador: "TIPO Y CALIBRE DE ARMA", mensaje: "El calibre registrado no corresponde ni es compatible con el tipo de arma o la especificación técnica volcada en el relato.", tipo: "SISTEMA" },
     { uuid: "sys-arm-003", id: "ARM-003", solapa: "Armas", nombre: "Omisión del Rol del Arma en el Evento", indicador: "ROL DEL ARMA EN EL HECHO", mensaje: "Falta especificar la función del arma dentro del evento (empleada, secuestrada, hallada o sustraida) siendo verificable en la narrativa.", tipo: "SISTEMA" },
-    { uuid: "sys-arm-004", id: "ARM-004", solapa: "Armas", nombre: "Discrepancia entre el Arma del Relato y el Catálogo de Clasificación", indicador: "TIPO DE ARMA NO CORRESPONDIENTE", mensaje: "El elemento o herramienta descrita en la síntesis no se encuadra correctamente dentro de la categoría o tipo de arma seleccionada.", tipo: "CONTROL" },
+    { uuid: "sys-arm-004", id: "ARM-004", solapa: "Armas", nombre: "Discrepancia entre el Arma del Relato y el Catálogo de Clasificación", indicador: "TIPO DE ARMA NO CORRESPONDIENTE", mensaje: "El elemento o herramienta descrita en la síntesis no se encuadra correctamente dentro de la categoría o tipo de arma seleccionada.", tipo: "SISTEMA" },
     { uuid: "sys-arm-005", id: "ARM-005", solapa: "Armas", nombre: "Omisión de Datos sobre la Utilización del Arma", indicador: "USO / UTILIZACIÓN DEL ARMA", mensaje: "No se registra si se utilizó el arma durante el suceso o no.", tipo: "SISTEMA" },
-    { uuid: "sys-arm-006", id: "ARM-006", solapa: "Armas", nombre: "Omisión de la Fuerza de Seguridad Pertinente", indicador: "TIPO DE FUERZA DE SEGURIDAD", mensaje: "Se omitió especificar la fuerza institucional a la que pertenece el arma oficial involucrada o secuestrada en el procedimiento.", tipo: "CONTROL" },
+    { uuid: "sys-arm-006", id: "ARM-006", solapa: "Armas", nombre: "Omisión de la Fuerza de Seguridad Pertinente", indicador: "TIPO DE FUERZA DE SEGURIDAD", mensaje: "Se omitió especificar la fuerza institucional a la que pertenece el arma oficial involucrada o secuestrada en el procedimiento.", tipo: "SISTEMA" },
 
-
-
+    { uuid: "sys-tra-001", id: "TRA-001", solapa: "Accidente Tránsito", nombre: "Inconsistencia entre Mecánica Vial y Delito Culposo Registrado", indicador: "TIPO DE ACCIDENTE / MECÁNICA VIAL", mensaje: "El Tipo de Accidente contradice la cantidad de vehículos registrados (ej. Univehicular/Peatón) o el tipo de delito (Homicidio/Lesiones Culposas).", tipo: "SISTEMA" },
+    { uuid: "sys-tra-002", id: "TRA-002", solapa: "Accidente Tránsito", nombre: "Omisión de Condiciones de Infraestructura y Vía Pública", indicador: "INFRAESTRUCTURA Y ESTADO DE LA VÍA", mensaje: "Falta clasificar la señalización, reductor de velocidad o estado de la calzada en siniestros viales con víctimas graves o fatales.", tipo: "SISTEMA" },
+    { uuid: "sys-tra-003", id: "TRA-003", solapa: "Accidente Tránsito", nombre: "Discrepancia entre Clasificación del Delito y Narrativa del Siniestro", indicador: "CLASIFICACIÓN DEL DELITO EN SINIESTRO VIAL", mensaje: "La tipificación del delito asignada al hecho vial no se corresponde con la descripción de las lesiones, daños o conducta de los conductores expresada en la síntesis del relato.", tipo: "SISTEMA" },
+    { uuid: "sys-tra-004", id: "TRA-004", solapa: "Accidente Tránsito", nombre: "Incongruencia en la Cantidad o Tipo de Vehículos Involucrados", indicador: "VEHÍCULOS INVOLUCRADOS VS RELATO", mensaje: "La cantidad, categoría o rol de los vehículos registrados en la solapa de tránsito contradice lo expuesto en la narrativa del evento.", tipo: "SISTEMA" },
     
     { uuid: "sys-err-001", id: "ERR-001", solapa: "Errores Varios", nombre: "Cuadrante", indicador: "CUADRANTE INCORRECTO", mensaje: "Se devuelve para la corrección del Cuadrante.", tipo: "SISTEMA" },
     { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Solapa incorrecta", indicador: "SOLAPA INCORRECTA / FALTANTE", mensaje: "La solapa correspondiente no se corresponde al evento.", tipo: "SISTEMA" }
@@ -97,7 +103,8 @@ const SOLAPAS_PREDETERMINADAS = [
     { id: "sol-6", nombre: "Personas", tipo: "SISTEMA" },
     { id: "sol-7", nombre: "Caratulas", tipo: "SISTEMA" },
     { id: "sol-8", nombre: "Armas", tipo: "SISTEMA" },
-    { id: "sol-9", nombre: "Errores Varios", tipo: "SISTEMA" }
+    { id: "sol-9", nombre: "Accidente Tránsito", tipo: "SISTEMA" },
+    { id: "sol-10", nombre: "Errores Varios", tipo: "SISTEMA" }
 ];
 
 const PARTIDOS_PREDETERMINADOS = [
