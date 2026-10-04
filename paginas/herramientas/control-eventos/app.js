@@ -15,7 +15,7 @@ const STORAGE_SOLAPAS = "control_eventos_solapas_db";
 const STORAGE_ELIMINADOS = "control_eventos_errores_eliminados_db";
 
 const ERRORES_PREDETERMINADOS = [
-    { uuid: "sys-lug-001", id: "LUG-001", solapa: "Lugar", nombre: "Geo del Lugar", indicador: "GEO DEL LUGAR DEL HECHO", mensaje: "No se valida la correspondencia de las coordenadas geográficas", tipo: "SISTEMA" },
+    { uuid: "sys-lug-001", id: "LUG-001", solapa: "Lugar", nombre: "Geo del Lugar", indicador: "GEO DEL LUGAR DEL HECHO", mensaje: "Las coordenadas cargadas no corresponden a la dirección declarada o ubican el punto fuera del rango geográfico/jurisdiccional del hecho.", tipo: "SISTEMA" },
     { uuid: "sys-lug-002", id: "LUG-002", solapa: "Lugar", nombre: "Zona del Evento", indicador: "ZONA", mensaje: "No se está clasificando la zona del evento.", tipo: "SISTEMA" },
     { uuid: "sys-lug-003", id: "LUG-003", solapa: "Lugar", nombre: "Fechas Fuera de Rango — Esclarecidas", indicador: "FECHAS ESCLARECIDAS", mensaje: "Posee Fechas Esclarecidas con fecha menor a la Fecha del Evento o no posee fecha directamente.", tipo: "SISTEMA" },
     { uuid: "sys-lug-004", id: "LUG-004", solapa: "Lugar", nombre: "Fechas Fuera de Rango — Altas", indicador: "FECHAS DE ALTA", mensaje: "Posee Fechas del Evento con fecha mayor a las Fechas de Alta. Verificar y corregir lo que corresponda.", tipo: "SISTEMA" },
@@ -24,8 +24,11 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-lug-007", id: "LUG-007", solapa: "Lugar", nombre: "Dependencia Actuante", indicador: "JURISDICCIÓN POLICIAL", mensaje: "Inconsistencia entre la localidad asignada y la comisaría seleccionada.", tipo: "SISTEMA" },
     { uuid: "sys-lug-008", id: "LUG-008", solapa: "Lugar", nombre: "Rango Horario del Evento", indicador: "RANGO TEMPORAL DEL EVENTO", mensaje: "El espacio temporal del Inicio y la Finalización del Evento registran exactamente el mismo valor, exclusivo para eventos especificos, generando una duración de cero minutos.",  tipo: "SISTEMA" },
 
-
-    
+    { uuid: "sys-car-001", id: "CAR-001", solapa: "Carátula", nombre: "Subtipificación o Degradación del Delito Principal", indicador: "TIPO DE DELITO / TIPICIDAD", mensaje: "Se clasificó un delito menor o no violento cuando en el relato constan elementos de violencia o coerción física", tipo: "SISTEMA" },
+    { uuid: "sys-car-002", id: "CAR-002", solapa: "Carátula", nombre: "Omisión de Agravantes o Calificantes Requeridas", indicador: "AGRAVANTES / CALIFICANTES DEL HECHO", mensaje: "No se registró el agravante correspondiente a pesar de que el relato menciona (Ej. el uso de armas, la participación de menores, la nocturnidad o la comisión en banda.)", tipo: "SISTEMA" },
+    { uuid: "sys-car-003", id: "CAR-003", solapa: "Carátula", nombre: "Inconsistencia en el Estado de Consumación", indicador: "GRADO DE TENTATIVA O CONSUMADO", mensaje: "El hecho se clasificó como 'Tentativa' pero se declararon bienes o elementos efectivamente apoderados/sustraídos (o viceversa).", tipo: "SISTEMA" },
+    { uuid: "sys-car-004", id: "CAR-004", solapa: "Carátula", nombre: "Omisión de Caratula según se verifica en el Relato", indicador: "OMISIÓN DE CARATULA", mensaje: "El hecho no presenta caratula de correlación", tipo: "SISTEMA" },
+ 
     { uuid: "sys-mod-001", id: "MOD-001", solapa: "Modalidad", nombre: "Falta Modalidad", indicador: "MODALIDAD FALTANTE", mensaje: "No se están clasificando las modalidades correspondientes al evento.", tipo: "SISTEMA" },
     { uuid: "sys-mod-002", id: "MOD-002", solapa: "Modalidad", nombre: "Modalidad Incorrecta", indicador: "MODALIDAD INCORRECTA", mensaje: "Se están verificando modalidades fuera del contexto del evento.", tipo: "SISTEMA" },
     { uuid: "sys-mod-003", id: "MOD-003", solapa: "Modalidad", nombre: "Control Modalidades", indicador: "CONTROL MODALIDADES", mensaje: "Se verifica que el evento no posee la modalidad que le corresponde.", tipo: "SISTEMA" },
@@ -43,8 +46,31 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-per-002", id: "PER-002", solapa: "Personas", nombre: "Edad - Es Menor? — Con Datos", indicador: "EDAD - ES MENOR?", mensaje: "Edad en -1 siendo claramente verificable en el relato.", tipo: "SISTEMA" },
     { uuid: "sys-per-003", id: "PER-003", solapa: "Personas", nombre: "Control Roles Víctima — Robo/Hurto", indicador: "ROLES VÍCTIMA", mensaje: "Cargar el rol correspondiente al evento. Los eventos de Robo/Hurto poseen un rol específico.", tipo: "SISTEMA" },
     { uuid: "sys-per-004", id: "PER-004", solapa: "Personas", nombre: "Control Roles Lesiones", indicador: "ROLES LESIONES", mensaje: "Cargar el rol específico para Lesiones. Todas las lesiones deben tener un lesionado.", tipo: "SISTEMA" },
-    { uuid: "sys-per-005", id: "PER-005", solapa: "Personas", nombre: "Control Roles Homicidio", indicador: "ROLES HOMICIDIO", mensaje: "Todos los eventos de homicidio deben incluir el rol de fallecido.", tipo: "SISTEMA" },
+    { uuid: "sys-per-005", id: "PER-005", solapa: "Personas", nombre: "Control Roles Homicidio", indicador: "ROLES HOMICIDIO", mensaje: "Todos los eventos de homicidio deben incluir el rol especifico a una victima de homicidio, a su vez, debe estar fallecida.", tipo: "SISTEMA" },
+    { uuid: "sys-per-006", id: "PER-006", solapa: "Personas", nombre: "Control Roles Suicidio", indicador: "ROLES SUICIDIO", mensaje: "Todos los eventos de suicidio deben incluir el rol especifico a una victima de suicidio.", tipo: "SISTEMA" },    
+    { uuid: "sys-per-007", id: "PER-007", solapa: "Personas", nombre: "Control Roles Violación", indicador: "ROLES VIOLACION", mensaje: "Todos los eventos de violación deben incluir el rol especifico a una victima de violación.", tipo: "SISTEMA" },
+    { uuid: "sys-per-008", id: "PER-008", solapa: "Personas", nombre: "Discrepancia entre Rol de Persona y Narrativa del Evento", indicador: "ROL DE LA PERSONA (VÍCTIMA/IMPUTADO/DENUNCIANTE)", mensaje: "El rol asignado a la persona inscrita no coincide con su actuación descrita en el hecho.", tipo: "SISTEMA" },
+    { uuid: "sys-per-009", id: "PER-009", solapa: "Personas", nombre: "Inconsistencia en Vínculo/Relación entre Víctima e Imputado", indicador: "RELACIÓN ENTRE INVOLUCRADOS", mensaje: "Se omitió o clasificó incorrectamente el vínculo preexistente (ej. intrafamiliar, laboral, desconocido, etc) siendo este determinante para el encuadre del análisis.", tipo: "SISTEMA" },
+    { uuid: "sys-per-010", id: "PER-010", solapa: "Personas", nombre: "Incompletitud en Asignación Directa del Delito por Involucrado", indicador: "VÍNCULO PERSONA - DELITO", mensaje: "No se desmarcaron o asociaron correctamente las conductas/delitos correspondientes a cada sujeto imputado en eventos con múltiples tipologías.", tipo: "SISTEMA" },
+    { uuid: "sys-per-011", id: "PER-011", solapa: "Personas", nombre: "Fecha de Nacimiento por Defecto Inconsistente", indicador: "FECHA DE NACIMIENTO POR DEFECTO", mensaje: "Se guardó una fecha genérica o por defecto del sistema, generando confusión en el rango etario real de la persona.", tipo: "SISTEMA" },
+    { uuid: "sys-per-012", id: "PER-012", solapa: "Personas", nombre: "Omisión del Tipo de Lesión Presente en el Relato", indicador: "TIPOLOGÍA DE LESIÓN", mensaje: "No se especificó la clase de lesión sufrida a pesar de estar detallada en el relato.", tipo: "SISTEMA" },
+    { uuid: "sys-per-013", id: "PER-013", solapa: "Personas", nombre: "Omisión de Lesión Requiriéndolo el Rol de la Persona", indicador: "LESIÓN SEGÚN ROL (VÍCTIMA/IMPUTADO)", mensaje: "El rol asignado (ej. Víctima de Lesiones o Imputado herido) requiere tipificar la lesión y la solapa figura sin registros.", tipo: "SISTEMA" },
+    { uuid: "sys-per-014", id: "PER-014", solapa: "Personas", nombre: "Omisión o Incongruencia en la Causa de la Lesión", indicador: "CAUSA Y MECANISMO DE LESIÓN", mensaje: "No se registró la causa del daño o existe contradicción entre el elemento utilizado y el tipo de lesión descripto.", tipo: "SISTEMA" },
+    { uuid: "sys-per-015", id: "PER-015", solapa: "Personas", nombre: "Omisión de Georreferencia del Domicilio del Involucrado", indicador: "GEORREFERENCIA DE DOMICILIO FALTANTE", mensaje: "Se ingresó la dirección de la persona pero se omitió fijar su punto georreferenciado o coordenada correspondiente.", tipo: "SISTEMA" },
+    { uuid: "sys-per-016", id: "PER-016", solapa: "Personas", nombre: "Georreferencia de Domicilio Incoherente o Mal Ubicada", indicador: "GEORREFERENCIA INCONGRUENTE DE DOMICILIO", mensaje: "El punto geográfico ubicado no guarda relación con la altura, calle o localidad declarada en la descripción textual del domicilio.", tipo: "SISTEMA" },
+    { uuid: "sys-per-017", id: "PER-017", solapa: "Personas", nombre: "Marcación de 'Desconoce Domicilio' Habiendo Datos en el Relato", indicador: "DESCONOCE DOMICILIO INCORRECTO", mensaje: "Se seleccionó la opción 'Desconoce Domicilio' contándose con la dirección de la persona en la síntesis del hecho.", tipo: "SISTEMA" },
+    { uuid: "sys-per-018", id: "PER-018", solapa: "Personas", nombre: "Omisión de Domicilio Presente en el Relato", indicador: "OMISIÓN DE DOMICILIO", mensaje: "Se omitió el domicilio del involucrado existiendo los datos filiatorios detallados en el cuerpo del acta.", tipo: "SISTEMA" },
+    { uuid: "sys-per-019", id: "PER-019", solapa: "Personas", nombre: "Error en la Clasificación del Sexo del Involucrado", indicador: "SEXO DE LA PERSONA", mensaje: "El sexo registrado no coincide con lo volcado en el relato.", tipo: "SISTEMA" },
+    { uuid: "sys-per-020", id: "PER-020", solapa: "Personas", nombre: "Error en la Registración del Género del Involucrado", indicador: "GÉNERO DE LA PERSONA", mensaje: "Falta especificar o se cargó de manera errónea la identidad de género de la persona involucrada.", tipo: "SISTEMA" },
+    { uuid: "sys-per-021", id: "PER-021", solapa: "Personas", nombre: "Discrepancia entre Sexo Biológico e Identidad de Género", indicador: "DIVERGENCIA SEXO / GÉNERO", mensaje: "Existe inconsistencia entre los campos de sexo de nacimiento y género asignado sin la correspondiente aclaración que lo fundamente.", tipo: "SISTEMA" },
+    { uuid: "sys-per-022", id: "PER-022", solapa: "Personas", nombre: "Error en el Cálculo o Registro de la Edad", indicador: "EDAD DEL INVOLUCRADO", mensaje: "La edad registrada no concuerda con la fecha de nacimiento ingresada o con el tramo etario mencionado en el hecho.", tipo: "SISTEMA" },
+    { uuid: "sys-per-023", id: "PER-023", solapa: "Personas", nombre: "Omisión de Edad Presente en el Relato", indicador: "OMISIÓN DE EDAD", mensaje: "No se completó el campo edad a pesar de estar explícitamente mencionada en la narrativa del evento.", tipo: "SISTEMA" },
+    
+    
+    
 
+
+    
     { uuid: "sys-err-001", id: "ERR-001", solapa: "Errores Varios", nombre: "Cuadrante", indicador: "CUADRANTE INCORRECTO", mensaje: "Se devuelve para la corrección del Cuadrante.", tipo: "SISTEMA" },
     { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Solapa incorrecta", indicador: "SOLAPA INCORRECTA / FALTANTE", mensaje: "La solapa correspondiente no se corresponde al evento.", tipo: "SISTEMA" }
 ];
