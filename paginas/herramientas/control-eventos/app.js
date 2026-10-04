@@ -89,6 +89,9 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-tra-002", id: "TRA-002", solapa: "Accidente Tránsito", nombre: "Omisión de Condiciones de Infraestructura y Vía Pública", indicador: "INFRAESTRUCTURA Y ESTADO DE LA VÍA", mensaje: "Falta clasificar la señalización, reductor de velocidad o estado de la calzada en siniestros viales con víctimas graves o fatales.", tipo: "SISTEMA" },
     { uuid: "sys-tra-003", id: "TRA-003", solapa: "Accidente Tránsito", nombre: "Discrepancia entre Clasificación del Delito y Narrativa del Siniestro", indicador: "CLASIFICACIÓN DEL DELITO EN SINIESTRO VIAL", mensaje: "La tipificación del delito asignada al hecho vial no se corresponde con la descripción de las lesiones, daños o conducta de los conductores expresada en la síntesis del relato.", tipo: "SISTEMA" },
     { uuid: "sys-tra-004", id: "TRA-004", solapa: "Accidente Tránsito", nombre: "Incongruencia en la Cantidad o Tipo de Vehículos Involucrados", indicador: "VEHÍCULOS INVOLUCRADOS VS RELATO", mensaje: "La cantidad, categoría o rol de los vehículos registrados en la solapa de tránsito contradice lo expuesto en la narrativa del evento.", tipo: "SISTEMA" },
+
+    { uuid: "sys-dro-001", id: "DRO-001", solapa: "Drogas", nombre: "Falta de Clasificación de Sustancia y Unidad de Medición", indicador: "TIPO, CANTIDAD Y UNIDAD DE DROGA", mensaje: "Se declaró un procedimiento por estupefacientes pero no se determinó la sustancia hallada/secuestrada o su pesaje/unidad correspondiente.", tipo: "SISTEMA" },
+    { uuid: "sys-dro-002", id: "DRO-002", solapa: "Drogas", nombre: "Incoherencia entre Procedimiento de Drogas y Carátula Principal", indicador: "TIPO DE PROCEDIMIENTO VS CARÁTULA", mensaje: "Se registró secuestro de sustancias bajo carátulas no vinculadas a infracción a la Ley de Drogas sin justificación ni acta complementaria.", tipo: "SISTEMA" },
     
     { uuid: "sys-err-001", id: "ERR-001", solapa: "Errores Varios", nombre: "Cuadrante", indicador: "CUADRANTE INCORRECTO", mensaje: "Se devuelve para la corrección del Cuadrante.", tipo: "SISTEMA" },
     { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Solapa incorrecta", indicador: "SOLAPA INCORRECTA / FALTANTE", mensaje: "La solapa correspondiente no se corresponde al evento.", tipo: "SISTEMA" }
@@ -104,7 +107,8 @@ const SOLAPAS_PREDETERMINADAS = [
     { id: "sol-7", nombre: "Caratulas", tipo: "SISTEMA" },
     { id: "sol-8", nombre: "Armas", tipo: "SISTEMA" },
     { id: "sol-9", nombre: "Accidente Tránsito", tipo: "SISTEMA" },
-    { id: "sol-10", nombre: "Errores Varios", tipo: "SISTEMA" }
+    { id: "sol-10", nombre: "Drogas", tipo: "SISTEMA" }
+    { id: "sol-11", nombre: "Errores Varios", tipo: "SISTEMA" }
 ];
 
 const PARTIDOS_PREDETERMINADOS = [
