@@ -15,7 +15,7 @@ const STORAGE_SOLAPAS = "control_eventos_solapas_db";
 const STORAGE_ELIMINADOS = "control_eventos_errores_eliminados_db";
 
 const ERRORES_PREDETERMINADOS = [
-    { uuid: "sys-lug-001", id: "LUG-001", solapa: "Lugar", nombre: "Geo del Lugar", indicador: "GEO DEL LUGAR DEL HECHO", mensaje: "No se geolocaliza el lugar del hecho correctamente.", tipo: "SISTEMA" },
+    { uuid: "sys-lug-001", id: "LUG-001", solapa: "Lugar", nombre: "Geo del Lugar", indicador: "GEO DEL LUGAR DEL HECHO", mensaje: "No se valida la correspondencia de las coordenadas geográficas", tipo: "SISTEMA" },
     { uuid: "sys-lug-002", id: "LUG-002", solapa: "Lugar", nombre: "Zona del Evento", indicador: "ZONA", mensaje: "No se está clasificando la zona del evento.", tipo: "SISTEMA" },
     { uuid: "sys-lug-003", id: "LUG-003", solapa: "Lugar", nombre: "Fechas Fuera de Rango — Esclarecidas", indicador: "FECHAS ESCLARECIDAS", mensaje: "Posee Fechas Esclarecidas con fecha menor a la Fecha del Evento o no posee fecha directamente.", tipo: "SISTEMA" },
     { uuid: "sys-lug-004", id: "LUG-004", solapa: "Lugar", nombre: "Fechas Fuera de Rango — Altas", indicador: "FECHAS DE ALTA", mensaje: "Posee Fechas del Evento con fecha mayor a las Fechas de Alta. Verificar y corregir lo que corresponda.", tipo: "SISTEMA" },
