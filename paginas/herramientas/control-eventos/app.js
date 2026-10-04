@@ -21,7 +21,11 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-lug-004", id: "LUG-004", solapa: "Lugar", nombre: "Fechas Fuera de Rango — Altas", indicador: "FECHAS DE ALTA", mensaje: "Posee Fechas del Evento con fecha mayor a las Fechas de Alta. Verificar y corregir lo que corresponda.", tipo: "SISTEMA" },
     { uuid: "sys-lug-005", id: "LUG-005", solapa: "Lugar", nombre: "Horas 00:00", indicador: "HORA DEL EVENTO", mensaje: "Denuncias donde indican hora del evento. Verificar eventos que indican una hora específica.", tipo: "SISTEMA" },
     { uuid: "sys-lug-006", id: "LUG-006", solapa: "Lugar", nombre: "Control Lugar", indicador: "DESCRIPCIÓN DE LUGAR", mensaje: "Verificar si el lugar corresponde a una de las descripciones solicitadas, por ejemplo urbana, intradomiciliaria, entre otras.", tipo: "SISTEMA" },
+    { uuid: "sys-lug-007", id: "LUG-007", solapa: "Lugar", nombre: "Dependencia Actuante", indicador: "JURISDICCIÓN POLICIAL", mensaje: "Inconsistencia entre la localidad asignada y la comisaría seleccionada.", tipo: "SISTEMA" },
+    { uuid: "sys-lug-008", id: "LUG-008", solapa: "Lugar", nombre: "Rango Horario del Evento", indicador: "RANGO TEMPORAL DEL EVENTO", mensaje: "El espacio temporal del Inicio y la Finalización del Evento registran exactamente el mismo valor, exclusivo para eventos especificos, generando una duración de cero minutos.",  tipo: "SISTEMA" },
 
+
+    
     { uuid: "sys-mod-001", id: "MOD-001", solapa: "Modalidad", nombre: "Falta Modalidad", indicador: "MODALIDAD FALTANTE", mensaje: "No se están clasificando las modalidades correspondientes al evento.", tipo: "SISTEMA" },
     { uuid: "sys-mod-002", id: "MOD-002", solapa: "Modalidad", nombre: "Modalidad Incorrecta", indicador: "MODALIDAD INCORRECTA", mensaje: "Se están verificando modalidades fuera del contexto del evento.", tipo: "SISTEMA" },
     { uuid: "sys-mod-003", id: "MOD-003", solapa: "Modalidad", nombre: "Control Modalidades", indicador: "CONTROL MODALIDADES", mensaje: "Se verifica que el evento no posee la modalidad que le corresponde.", tipo: "SISTEMA" },
