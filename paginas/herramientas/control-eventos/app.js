@@ -110,7 +110,7 @@ const SOLAPAS_PREDETERMINADAS = [
     { id: "sol-7", nombre: "Caratulas", tipo: "SISTEMA" },
     { id: "sol-8", nombre: "Armas", tipo: "SISTEMA" },
     { id: "sol-9", nombre: "Accidente Tránsito", tipo: "SISTEMA" },
-    { id: "sol-10", nombre: "Drogas", tipo: "SISTEMA" }
+    { id: "sol-10", nombre: "Drogas", tipo: "SISTEMA" },
     { id: "sol-11", nombre: "Errores Varios", tipo: "SISTEMA" }
 ];
 
