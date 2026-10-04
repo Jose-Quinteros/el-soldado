@@ -66,8 +66,13 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-per-022", id: "PER-022", solapa: "Personas", nombre: "Error en el Cálculo o Registro de la Edad", indicador: "EDAD DEL INVOLUCRADO", mensaje: "La edad registrada no concuerda con la fecha de nacimiento ingresada o con el tramo etario mencionado en el hecho.", tipo: "SISTEMA" },
     { uuid: "sys-per-023", id: "PER-023", solapa: "Personas", nombre: "Omisión de Edad Presente en el Relato", indicador: "OMISIÓN DE EDAD", mensaje: "No se completó el campo edad a pesar de estar explícitamente mencionada en la narrativa del evento.", tipo: "SISTEMA" },
     
-    
-    
+    { uuid: "sys-arm-001", id: "ARM-001", solapa: "Armas", nombre: "Omisión de Atributos Técnicos del Arma Secuestrada", indicador: "TIPO, CALIBRE Y ROL DEL ARMA", mensaje: "Se declaró el secuestro de un arma pero no se clasificaron sus datos básicos (tipo, calibre, aptitud para el disparo o rol en el hecho).", tipo: "SISTEMA" },
+    { uuid: "sys-arm-002", id: "ARM-002", solapa: "Armas", nombre: "Incongruencia entre Tipo de Arma y Calibre según Relato", indicador: "TIPO Y CALIBRE DE ARMA", mensaje: "El calibre registrado no corresponde ni es compatible con el tipo de arma o la especificación técnica volcada en el relato.", tipo: "SISTEMA" },
+    { uuid: "sys-arm-003", id: "ARM-003", solapa: "Armas", nombre: "Omisión del Rol del Arma en el Evento", indicador: "ROL DEL ARMA EN EL HECHO", mensaje: "Falta especificar la función del arma dentro del evento (empleada, secuestrada, hallada o sustraida) siendo verificable en la narrativa.", tipo: "SISTEMA" },
+    { uuid: "sys-arm-004", id: "ARM-004", solapa: "Armas", nombre: "Discrepancia entre el Arma del Relato y el Catálogo de Clasificación", indicador: "TIPO DE ARMA NO CORRESPONDIENTE", mensaje: "El elemento o herramienta descrita en la síntesis no se encuadra correctamente dentro de la categoría o tipo de arma seleccionada.", tipo: "CONTROL" },
+    { uuid: "sys-arm-005", id: "ARM-005", solapa: "Armas", nombre: "Omisión de Datos sobre la Utilización del Arma", indicador: "USO / UTILIZACIÓN DEL ARMA", mensaje: "No se registra si se utilizó el arma durante el suceso o no.", tipo: "SISTEMA" },
+    { uuid: "sys-arm-006", id: "ARM-006", solapa: "Armas", nombre: "Omisión de la Fuerza de Seguridad Pertinente", indicador: "TIPO DE FUERZA DE SEGURIDAD", mensaje: "Se omitió especificar la fuerza institucional a la que pertenece el arma oficial involucrada o secuestrada en el procedimiento.", tipo: "CONTROL" },
+
 
 
     
@@ -82,7 +87,9 @@ const SOLAPAS_PREDETERMINADAS = [
     { id: "sol-4", nombre: "Rodados", tipo: "SISTEMA" },
     { id: "sol-5", nombre: "Elementos", tipo: "SISTEMA" },
     { id: "sol-6", nombre: "Personas", tipo: "SISTEMA" },
-    { id: "sol-7", nombre: "Errores Varios", tipo: "SISTEMA" }
+    { id: "sol-7", nombre: "Caratulas", tipo: "SISTEMA" },
+    { id: "sol-8", nombre: "Armas", tipo: "SISTEMA" },
+    { id: "sol-9", nombre: "Errores Varios", tipo: "SISTEMA" }
 ];
 
 const PARTIDOS_PREDETERMINADOS = [
