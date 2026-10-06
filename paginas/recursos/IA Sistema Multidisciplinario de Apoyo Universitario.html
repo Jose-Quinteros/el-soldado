@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Apoyo Universitario Multidisciplinario de Alto Nivel</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.2);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --tag-bg: #0284c7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 2.5rem auto;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto 2rem auto;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        #searchBar {
+            flex: 1;
+            min-width: 280px;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #searchBar:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .grid-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background-color: var(--card-hover);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .topics-list {
+            list-style: none;
+            margin-bottom: 1.2rem;
+        }
+
+        .topics-list li {
+            font-size: 0.85rem;
+            background-color: rgba(255,255,255,0.05);
+            margin-bottom: 0.3rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            color: #cbd5e1;
+        }
+
+        .ai-tools {
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+            margin-top: auto;
+        }
+
+        .ai-tools-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .ai-link {
+            display: inline-block;
+            background-color: var(--tag-bg);
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        .ai-link:hover {
+            opacity: 0.85;
+            transform: scale(1.03);
+        }
+
+        footer {
+            max-width: 1200px;
+            margin: 3rem auto 0 auto;
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Sistema Multidisciplinario de Apoyo Universitario</h1>
+        <p>Plataforma integral de aprendizaje, investigación, análisis crítico e inteligencia artificial complementaria.</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchBar" placeholder="Buscar por disciplina, método, concepto o herramienta de IA (ej: Criminología, Python, Perplexity)...">
+    </div>
+
+    <main class="grid-container" id="gridContainer">
+        <!-- Las tarjetas se generan dinámicamente mediante JavaScript -->
+    </main>
+
+    <footer>
+        <p>© Sistema de Apoyo Académico Universitario de Alto Nivel — Rigor, Método y Verificación Científica.</p>
+    </footer>
+
+    <script>
+        // Repositorio de Enlaces Oficiales de Herramientas de IA
+        const AI_URLS = {
+            "ChatGPT": "https://chatgpt.com",
+            "Claude": "https://claude.ai",
+            "Gemini": "https://gemini.google.com",
+            "Perplexity": "https://www.perplexity.ai",
+            "NotebookLM": "https://notebooklm.google.com",
+            "Wolfram|Alpha": "https://www.wolframalpha.com",
+            "GeoGebra": "https://www.geogebra.org",
+            "Zotero": "https://www.zotero.org",
+            "Python": "https://www.python.org",
+            "R": "https://www.r-project.org",
+            "GitHub Copilot": "https://github.com/features/copilot",
+            "Excel": "https://www.microsoft.com/excel",
+            "Herramientas GIS": "https://www.qgis.org"
+        };
+
+        // Estructura de Datos basada en las 24 Secciones del Prompt
+        const disciplinas = [
+            {
+                id: 1,
+                nombre: "Análisis Criminal",
+                descripcion: "Especialización en inteligencia criminal, patrones delictivos, perfil geográfico y prevención.",
+                temas: ["Análisis Táctico / Estratégico", "Análisis Espacial y Hot Spots", "Series Delictivas y Victimología", "Cadena: Datos → Información → Hipótesis"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"]
+            },
+            {
+                id: 2,
+                nombre: "Criminología",
+                descripcion: "Criminología general, crítica, ambiental, criminalidad organizada y factores de riesgo/protectores.",
+                temas: ["Teorías Criminológicas", "Control Social y Desviación", "Estructura: Teoría → Autor → Evidencia → Aplicación"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"]
+            },
+            {
+                id: 3,
+                nombre: "Psicología Criminal",
+                descripcion: "Procesos cognitivos, motivación, conducta antisocial, evaluación de hipótesis conductuales.",
+                temas: ["Evaluación Conductual", "Perfilación Psicoclínica", "Distinción: Observación → Inferencia → Hipótesis"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"]
+            },
+            {
+                id: 4,
+                nombre: "Perfilación Criminal",
+                descripcion: "Análisis conductual de la escena del crimen, modus operandi, firma y victimología.",
+                temas: ["Modus Operandi vs. Firma", "Análisis de la Escena del Crimen", "Proceso: Evidencia → Patrón → Hipótesis"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity"]
+            },
+            {
+                id: 5,
+                nombre: "Criminología Ambiental",
+                descripcion: "Análisis del espacio, oportunidad, rutinas, movilidad y prevención mediante diseño (CPTED).",
+                temas: ["Routine Activity Theory", "Crime Pattern Theory", "Rational Choice Theory & CPTED", "Herramientas GIS & Hot Spots"],
+                herramientas: ["ChatGPT", "Gemini", "Perplexity", "Herramientas GIS"]
+            },
+            {
+                id: 6,
+                nombre: "Metodología de la Investigación",
+                descripcion: "Diseño metodológico cualitativo, cuantitativo y mixto. Control de coherencia científica.",
+                temas: ["Problema, Objetivos e Hipótesis", "Variables, Dimensiones e Indicadores", "Población, Muestra e Instrumentos", "Gestión Bibliográfica (Zotero)"],
+                herramientas: ["ChatGPT", "Claude", "Perplexity", "NotebookLM", "Zotero"]
+            },
+            {
+                id: 7,
+                nombre: "Estadística y Análisis de Datos",
+                descripcion: "Estadística descriptiva e inferencial, correlación, regresión, análisis temporal y espacial.",
+                temas: ["Limpieza y Estructuración de Datos", "Cálculo de Indicadores y Anomalías", "Distinción: Correlación ≠ Causalidad", "Generación de Gráficos e Interpretación"],
+                herramientas: ["ChatGPT", "Python", "R", "Excel", "Wolfram|Alpha"]
+            },
+            {
+                id: 8,
+                nombre: "Matemática",
+                descripcion: "Resolución universitaria de problemas con verificación procedimental y métodos alternativos.",
+                temas: ["Análisis de Datos y Métodos", "Desarrollo Paso a Paso", "Comprobación de Resultados", "Visualización Dinámica"],
+                herramientas: ["Wolfram|Alpha", "GeoGebra", "ChatGPT", "Gemini"]
+            },
+            {
+                id: 9,
+                nombre: "Derecho",
+                descripcion: "Análisis jurídico: Constitución, leyes, decretos, jurisprudencia y doctrina.",
+                temas: ["Jerarquía Normativa", "Norma Vigente vs. Interpretación", "Derecho Comparado y Jurisprudencia", "Priorización de Fuentes Oficiales"],
+                herramientas: ["ChatGPT", "Perplexity", "Gemini"]
+            },
+            {
+                id: 10,
+                nombre: "Historia",
+                descripcion: "Análisis contextual, historiográfico, cronológico y crítica de fuentes primarias/secundarias.",
+                temas: ["Hecho Histórico vs. Interpretación", "Controversias Historiográficas", "Causalidad y Consecuencias"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"]
+            },
+            {
+                id: 11,
+                nombre: "Sociología",
+                descripcion: "Estructuras sociales, instituciones, desigualdad, control social y comportamiento colectivo.",
+                temas: ["Teorías Sociológicas Clásicas y Modernas", "Instituciones y Conflicto Social", "Análisis de Contexto Histórico"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity"]
+            },
+            {
+                id: 12,
+                nombre: "Filosofía",
+                descripcion: "Análisis argumentativo riguroso. Estructura: Autor → Obra → Concepto → Argumento → Postura.",
+                temas: ["Lógica e Historiografía Filosófica", "Análisis de Argumentos y Contraargumentos", "Filosofía Política y Epistemología"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"]
+            },
+            {
+                id: 13,
+                nombre: "Informática y Programación",
+                descripcion: "Desarrollo de software, algoritmos, bases de datos, automatización y revisión de código.",
+                temas: ["HTML, CSS, JS, Python, SQL, Node.js", "Arquitectura e Integración de APIs", "Debugging, Optimización y Seguridad"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "GitHub Copilot"]
+            },
+            {
+                id: 14,
+                nombre: "Inteligencia Artificial",
+                descripcion: "Modelos de lenguaje, prompting, agentes, RAG, embeddings y evaluación ética.",
+                temas: ["Modelos LLM, VDB y Embeddings", "Sistemas RAG y Arquitectura de Agentes", "Evaluación de Modelos e Impacto Ético"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity"]
+            },
+            {
+                id: 15,
+                nombre: "Economía",
+                descripcion: "Microeconomía, macroeconomía, mercado, inflación, empleo y política económica.",
+                temas: ["Oferta, Demanda y Equilibrios", "Indicadores Económicos y Modelos", "Análisis Estadístico Verificado"],
+                herramientas: ["ChatGPT", "Perplexity", "Excel", "Python"]
+            },
+            {
+                id: 16,
+                nombre: "Administración y Gestión",
+                descripcion: "Planificación estratégica, procesos, liderazgo, gestión de proyectos y mejora continua.",
+                temas: ["Organización, Dirección y Control", "Indicadores de Gestión (KPIs)", "Toma de Decisiones basada en Datos"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Excel"]
+            },
+            {
+                id: 17,
+                nombre: "Ciencias Policiales y Seguridad",
+                descripcion: "Seguridad pública, gestión operativa, planificación y análisis estratégico de inteligencia.",
+                temas: ["Prevención del Delito y Seguridad Ciudadana", "Evaluación e Inteligencia Policial", "Modelos Operativos e Indicadores"],
+                herramientas: ["ChatGPT", "Claude", "Perplexity", "NotebookLM"]
+            },
+            {
+                id: 18,
+                nombre: "Redacción Académica",
+                descripcion: "Estructuración de monografías, ensayos, informes y artículos según estándares universitarios.",
+                temas: ["Estructura Científica Completa", "Estilo Académico Preciso", "Prevención de Alucinaciones y Citas Falsas"],
+                herramientas: ["ChatGPT", "Claude", "Zotero", "NotebookLM"]
+            },
+            {
+                id: 19,
+                nombre: "Preparación para Exámenes",
+                descripcion: "Modo docente interactivo con 6 fases: Diagnóstico, Enseñanza, Práctica, Evaluación, Corrección y Repaso.",
+                temas: ["Simulacros de Examen", "Detección de Errores Conceptuales", "Aumento Progresivo de Dificultad"],
+                herramientas: ["ChatGPT", "Claude", "NotebookLM"]
+            },
+            {
+                id: 20,
+                nombre: "Análisis de Documentos y PDFs",
+                descripcion: "Procesamiento riguroso de fuentes documentales subidas sin invención de contenido.",
+                temas: ["Extracción de Conceptos Clave y Métodos", "Identificación de Autor, Título y Estructura", "Detección de Contradicciones"],
+                herramientas: ["NotebookLM", "Claude", "ChatGPT"]
+            },
+            {
+                id: 21,
+                nombre: "Sistema de Investigación Académica",
+                descripcion: "Workflow académico estructurado en 10 fases desde la idea inicial hasta las referencias.",
+                temas: ["Delimitación, Pregunta y Objetivos", "Marco Teórico y Estado del Arte", "Análisis y Discusión de Evidencia"],
+                herramientas: ["Perplexity", "NotebookLM", "Zotero", "ChatGPT"]
+            },
+            {
+                id: 22,
+                nombre: "Módulo de Selección de Herramientas IA",
+                descripcion: "Matriz de selección especializada de software de IA según el tipo de tarea universitaria.",
+                temas: ["Clasificación por Función y Caso de Uso", "Evaluación Objetiva sin Rankings Arbitrarios", "Integración Metodológica Eficiente"],
+                herramientas: ["ChatGPT", "Claude", "Gemini", "Perplexity", "NotebookLM"]
+            },
+            {
+                id: 23,
+                nombre: "Control de Calidad Académico",
+                descripcion: "Lista de verificación interna previa a entregas académicas para garantizar rigor y validez.",
+                temas: ["Comprobación de Fuetes y Referencias", "Separación entre Hechos e Interpretaciones", "Validación Metodológica e Hipótesis"],
+                herramientas: ["ChatGPT", "Claude", "Perplexity"]
+            },
+            {
+                id: 24,
+                nombre: "Protocolo Estructurado de Respuesta",
+                descripcion: "Estructura formal para la presentación de trabajos: Identificación, Desarrollo, Conclusión y Bibliografía.",
+                temas: ["Encabezado Metodológico Obligatorio", "Formatos de Cita Científica", "Sección Final de Garantía Académica"],
+                herramientas: ["ChatGPT", "Claude", "NotebookLM"]
+            }
+        ];
+
+        // Función para renderizar las tarjetas en la interfaz
+        function renderCards(data) {
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 2rem;">No se encontraron disciplinas o herramientas que coincidan con la búsqueda.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                // Generar los botones con los enlaces de IA correspondientes
+                const toolsHTML = item.herramientas.map(tool => {
+                    const url = AI_URLS[tool] || '#';
+                    return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="ai-link">${tool}</a>`;
+                }).join('');
+
+                // Generar la lista de temas
+                const topicsHTML = item.temas.map(tema => `<li>• ${tema}</li>`).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="card-header">
+                            <h2 class="card-title">${item.id}. ${item.nombre}</h2>
+                            <p class="card-description">${item.descripcion}</p>
+                        </div>
+                        <ul class="topics-list">
+                            ${topicsHTML}
+                        </ul>
+                    </div>
+                    <div class="ai-tools">
+                        <div class="ai-tools-title">Herramientas IA Sugeridas:</div>
+                        <div class="tags-container">
+                            ${toolsHTML}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Sistema de búsqueda y filtrado dinámico
+        document.getElementById('searchBar').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = disciplinas.filter(d => {
+                const matchNombre = d.nombre.toLowerCase().includes(searchTerm);
+                const matchDesc = d.descripcion.toLowerCase().includes(searchTerm);
+                const matchTemas = d.temas.some(t => t.toLowerCase().includes(searchTerm));
+                const matchTools = d.herramientas.some(h => h.toLowerCase().includes(searchTerm));
+                
+                return matchNombre || matchDesc || matchTemas || matchTools;
+            });
+            renderCards(filtered);
+        });
+
+        // Carga inicial
+        renderCards(disciplinas);
+    </script>
+</body>
+</html>

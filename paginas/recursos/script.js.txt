@@ -1,0 +1,3474 @@
+```javascript
+/* ============================================================
+   AI WORLD HUB
+   app.js
+   Directorio, buscador, ranking, comparador y recomendador de IA
+   ============================================================ */
+
+"use strict";
+
+/* ============================================================
+   CONFIGURACIÓN
+   ============================================================ */
+
+const STORAGE = {
+    favorites: "aiwh_favorites",
+    theme: "aiwh_theme",
+    custom: "aiwh_custom"
+};
+
+const PAGE_SIZE = 20;
+
+const SCORE_WEIGHTS = {
+    potencia: 0.25,
+    calidad: 0.20,
+    versatilidad: 0.20,
+    popularidad: 0.15,
+    innovacion: 0.10,
+    facilidad: 0.10
+};
+
+const CATEGORIES = [
+    "Asistentes",
+    "Programación",
+    "Datos",
+    "Investigación",
+    "Imágenes",
+    "Video",
+    "Audio",
+    "Educación",
+    "Marketing",
+    "Negocios",
+    "Automatización",
+    "Ciberseguridad",
+    "Multimodal",
+    "Agentes de IA",
+    "Diseño"
+];
+
+
+/* ============================================================
+   ESTADO GLOBAL
+   ============================================================ */
+
+let selectedForComparison = new Set();
+
+let currentPage = 1;
+
+let currentResults = [];
+
+let currentCategory = "";
+
+let customIA = loadCustomIA();
+
+
+/* ============================================================
+   BASE DE DATOS INICIAL
+   ============================================================ */
+
+const iaDatabase = [
+
+    {
+        id: "chatgpt",
+        nombre: "ChatGPT",
+        empresa: "OpenAI",
+        url: "https://chatgpt.com/",
+        descripcion:
+            "Asistente conversacional para escritura, análisis, aprendizaje, código y tareas multimodales.",
+        categorias: [
+            "Asistentes",
+            "Multimodal",
+            "Programación",
+            "Educación"
+        ],
+        especialidades: [
+            "Texto",
+            "Código",
+            "Investigación",
+            "Análisis"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web",
+            "Windows",
+            "macOS",
+            "Android",
+            "iOS"
+        ],
+        potencia: 96,
+        calidad: 96,
+        versatilidad: 99,
+        facilidad: 95,
+        popularidad: 99,
+        innovacion: 97,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "texto",
+            "codigo",
+            "datos",
+            "multimodal",
+            "investigacion"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "claude",
+        nombre: "Claude",
+        empresa: "Anthropic",
+        url: "https://claude.ai/",
+        descripcion:
+            "Asistente de IA orientado a razonamiento, escritura, análisis y trabajo con documentos.",
+        categorias: [
+            "Asistentes",
+            "Investigación",
+            "Programación"
+        ],
+        especialidades: [
+            "Texto",
+            "Código",
+            "Análisis",
+            "Documentos"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web",
+            "iOS",
+            "Android"
+        ],
+        potencia: 96,
+        calidad: 97,
+        versatilidad: 94,
+        facilidad: 93,
+        popularidad: 94,
+        innovacion: 95,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "texto",
+            "codigo",
+            "documentos",
+            "investigacion"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "gemini",
+        nombre: "Gemini",
+        empresa: "Google",
+        url: "https://gemini.google.com/",
+        descripcion:
+            "IA de Google para escribir, planificar, aprender y resolver tareas con capacidades multimodales.",
+        categorias: [
+            "Asistentes",
+            "Multimodal",
+            "Educación",
+            "Investigación"
+        ],
+        especialidades: [
+            "Texto",
+            "Investigación",
+            "Aprendizaje",
+            "Imagen"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web",
+            "Android",
+            "iOS"
+        ],
+        potencia: 95,
+        calidad: 94,
+        versatilidad: 98,
+        facilidad: 95,
+        popularidad: 97,
+        innovacion: 96,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "texto",
+            "imagen",
+            "multimodal",
+            "investigacion"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "perplexity",
+        nombre: "Perplexity",
+        empresa: "Perplexity AI",
+        url: "https://www.perplexity.ai/",
+        descripcion:
+            "Motor de respuestas e investigación web con fuentes y capacidades de análisis.",
+        categorias: [
+            "Investigación",
+            "Asistentes",
+            "Datos"
+        ],
+        especialidades: [
+            "Investigación web",
+            "Fuentes",
+            "Análisis"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web",
+            "Android",
+            "iOS"
+        ],
+        potencia: 93,
+        calidad: 94,
+        versatilidad: 91,
+        facilidad: 94,
+        popularidad: 94,
+        innovacion: 95,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "investigacion",
+            "web",
+            "fuentes",
+            "datos"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "copilot",
+        nombre: "GitHub Copilot",
+        empresa: "GitHub",
+        url: "https://github.com/features/copilot",
+        descripcion:
+            "Asistente y agente de programación integrado en GitHub, IDE, CLI y flujos de desarrollo.",
+        categorias: [
+            "Programación",
+            "Agentes de IA"
+        ],
+        especialidades: [
+            "Código",
+            "Code review",
+            "Agentes"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: false,
+        plataformas: [
+            "Web",
+            "Windows",
+            "macOS",
+            "Linux"
+        ],
+        potencia: 95,
+        calidad: 94,
+        versatilidad: 89,
+        facilidad: 92,
+        popularidad: 96,
+        innovacion: 96,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "codigo",
+            "programacion",
+            "agentes"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "cursor",
+        nombre: "Cursor",
+        empresa: "Anysphere",
+        url: "https://cursor.com/",
+        descripcion:
+            "Editor y agente de programación con tareas autónomas y trabajo con repositorios.",
+        categorias: [
+            "Programación",
+            "Agentes de IA"
+        ],
+        especialidades: [
+            "Código",
+            "Agentes",
+            "Software"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: false,
+        plataformas: [
+            "Windows",
+            "macOS",
+            "Linux",
+            "Web"
+        ],
+        potencia: 96,
+        calidad: 95,
+        versatilidad: 91,
+        facilidad: 90,
+        popularidad: 93,
+        innovacion: 98,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "codigo",
+            "programacion",
+            "agentes"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "replit",
+        nombre: "Replit",
+        empresa: "Replit",
+        url: "https://replit.com/",
+        descripcion:
+            "Plataforma para crear aplicaciones y sitios mediante lenguaje natural con agentes de IA.",
+        categorias: [
+            "Programación",
+            "Agentes de IA",
+            "Diseño"
+        ],
+        especialidades: [
+            "Web",
+            "Apps",
+            "Código"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web",
+            "Android",
+            "iOS"
+        ],
+        potencia: 91,
+        calidad: 90,
+        versatilidad: 95,
+        facilidad: 94,
+        popularidad: 90,
+        innovacion: 96,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "codigo",
+            "web",
+            "apps",
+            "agentes"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "midjourney",
+        nombre: "Midjourney",
+        empresa: "Midjourney",
+        url: "https://www.midjourney.com/",
+        descripcion:
+            "Herramienta generativa orientada a creación de imágenes y contenido visual.",
+        categorias: [
+            "Imágenes",
+            "Diseño"
+        ],
+        especialidades: [
+            "Imagen",
+            "Arte",
+            "Diseño"
+        ],
+        precio: "Pago",
+        gratuita: false,
+        api: false,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 96,
+        calidad: 97,
+        versatilidad: 88,
+        facilidad: 88,
+        popularidad: 95,
+        innovacion: 96,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "imagen",
+            "arte",
+            "diseño"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "firefly",
+        nombre: "Adobe Firefly",
+        empresa: "Adobe",
+        url: "https://firefly.adobe.com/",
+        descripcion:
+            "Estudio creativo de IA para generar y editar imágenes, video, audio y otros contenidos.",
+        categorias: [
+            "Imágenes",
+            "Video",
+            "Audio",
+            "Diseño"
+        ],
+        especialidades: [
+            "Imagen",
+            "Video",
+            "Audio",
+            "Diseño"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 93,
+        calidad: 95,
+        versatilidad: 96,
+        facilidad: 91,
+        popularidad: 91,
+        innovacion: 96,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "imagen",
+            "video",
+            "audio",
+            "diseño"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "runway",
+        nombre: "Runway",
+        empresa: "Runway",
+        url: "https://runwayml.com/",
+        descripcion:
+            "Plataforma de creación de contenido generativo enfocada especialmente en video.",
+        categorias: [
+            "Video",
+            "Imágenes",
+            "Diseño"
+        ],
+        especialidades: [
+            "Video",
+            "Generación",
+            "Edición"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 94,
+        calidad: 95,
+        versatilidad: 91,
+        facilidad: 88,
+        popularidad: 92,
+        innovacion: 97,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "video",
+            "imagen",
+            "edicion"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "elevenlabs",
+        nombre: "ElevenLabs",
+        empresa: "ElevenLabs",
+        url: "https://elevenlabs.io/",
+        descripcion:
+            "Plataforma de voz y audio con texto a voz, voz a texto, doblaje, música y agentes.",
+        categorias: [
+            "Audio",
+            "Agentes de IA"
+        ],
+        especialidades: [
+            "Voz",
+            "Audio",
+            "Doblaje",
+            "Música"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 95,
+        calidad: 97,
+        versatilidad: 94,
+        facilidad: 92,
+        popularidad: 91,
+        innovacion: 98,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "audio",
+            "voz",
+            "musica",
+            "agentes"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "canva",
+        nombre: "Canva AI",
+        empresa: "Canva",
+        url: "https://www.canva.com/canva-ai/",
+        descripcion:
+            "Herramientas de IA integradas en la suite visual para diseño, escritura, imágenes, video y contenido.",
+        categorias: [
+            "Diseño",
+            "Imágenes",
+            "Marketing",
+            "Video"
+        ],
+        especialidades: [
+            "Diseño",
+            "Contenido",
+            "Presentaciones"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: false,
+        plataformas: [
+            "Web",
+            "Windows",
+            "macOS",
+            "Android",
+            "iOS"
+        ],
+        potencia: 88,
+        calidad: 91,
+        versatilidad: 97,
+        facilidad: 98,
+        popularidad: 98,
+        innovacion: 93,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "diseño",
+            "imagen",
+            "video",
+            "marketing"
+        ],
+        verificada: true,
+        destacada: true
+    },
+
+    {
+        id: "notebooklm",
+        nombre: "NotebookLM",
+        empresa: "Google",
+        url: "https://notebooklm.google.com/",
+        descripcion:
+            "Herramienta de investigación y aprendizaje basada en las fuentes y documentos aportados por el usuario.",
+        categorias: [
+            "Investigación",
+            "Educación",
+            "Asistentes"
+        ],
+        especialidades: [
+            "Documentos",
+            "Estudio",
+            "Investigación"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: false,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 90,
+        calidad: 94,
+        versatilidad: 86,
+        facilidad: 94,
+        popularidad: 90,
+        innovacion: 95,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "investigacion",
+            "educacion",
+            "documentos"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "gamma",
+        nombre: "Gamma",
+        empresa: "Gamma",
+        url: "https://gamma.app/",
+        descripcion:
+            "Herramienta para crear presentaciones y contenido visual asistido por IA.",
+        categorias: [
+            "Diseño",
+            "Educación",
+            "Marketing"
+        ],
+        especialidades: [
+            "Presentaciones",
+            "Contenido",
+            "Diseño"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: false,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 84,
+        calidad: 88,
+        versatilidad: 89,
+        facilidad: 95,
+        popularidad: 85,
+        innovacion: 91,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "presentaciones",
+            "diseño",
+            "marketing"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "mistral",
+        nombre: "Le Chat",
+        empresa: "Mistral AI",
+        url: "https://chat.mistral.ai/",
+        descripcion:
+            "Asistente de Mistral AI para conversación, razonamiento, investigación y productividad.",
+        categorias: [
+            "Asistentes",
+            "Investigación",
+            "Programación"
+        ],
+        especialidades: [
+            "Texto",
+            "Código",
+            "Investigación"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 91,
+        calidad: 91,
+        versatilidad: 90,
+        facilidad: 92,
+        popularidad: 80,
+        innovacion: 93,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "texto",
+            "codigo",
+            "investigacion"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "grok",
+        nombre: "Grok",
+        empresa: "xAI",
+        url: "https://grok.com/",
+        descripcion:
+            "Asistente de IA para conversación, razonamiento, información y tareas generales.",
+        categorias: [
+            "Asistentes",
+            "Multimodal",
+            "Investigación"
+        ],
+        especialidades: [
+            "Texto",
+            "Razonamiento",
+            "Información"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web",
+            "iOS",
+            "Android"
+        ],
+        potencia: 93,
+        calidad: 90,
+        versatilidad: 94,
+        facilidad: 92,
+        popularidad: 91,
+        innovacion: 95,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "texto",
+            "multimodal",
+            "investigacion"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "synthesia",
+        nombre: "Synthesia",
+        empresa: "Synthesia",
+        url: "https://www.synthesia.io/",
+        descripcion:
+            "Plataforma de creación de videos con avatares y voz generados por IA.",
+        categorias: [
+            "Video",
+            "Marketing",
+            "Educación"
+        ],
+        especialidades: [
+            "Video",
+            "Avatares",
+            "Capacitación"
+        ],
+        precio: "Pago",
+        gratuita: false,
+        api: true,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 88,
+        calidad: 91,
+        versatilidad: 88,
+        facilidad: 94,
+        popularidad: 86,
+        innovacion: 94,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "video",
+            "avatares",
+            "educacion"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "zapier",
+        nombre: "Zapier AI",
+        empresa: "Zapier",
+        url: "https://zapier.com/ai",
+        descripcion:
+            "Automatización de flujos de trabajo con funciones de IA y conexión entre aplicaciones.",
+        categorias: [
+            "Automatización",
+            "Negocios",
+            "Agentes de IA"
+        ],
+        especialidades: [
+            "Automatización",
+            "Workflows",
+            "Agentes"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 88,
+        calidad: 89,
+        versatilidad: 96,
+        facilidad: 93,
+        popularidad: 94,
+        innovacion: 95,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "automatizacion",
+            "workflows",
+            "agentes"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "grammarly",
+        nombre: "Grammarly",
+        empresa: "Grammarly",
+        url: "https://www.grammarly.com/ai",
+        descripcion:
+            "Asistencia de escritura y productividad con funciones de IA para redactar y mejorar textos.",
+        categorias: [
+            "Asistentes",
+            "Educación",
+            "Marketing"
+        ],
+        especialidades: [
+            "Escritura",
+            "Edición",
+            "Contenido"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: false,
+        plataformas: [
+            "Web",
+            "Windows",
+            "macOS",
+            "iOS",
+            "Android"
+        ],
+        potencia: 82,
+        calidad: 90,
+        versatilidad: 87,
+        facilidad: 97,
+        popularidad: 94,
+        innovacion: 89,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "texto",
+            "escritura",
+            "marketing"
+        ],
+        verificada: true,
+        destacada: false
+    },
+
+    {
+        id: "huggingface",
+        nombre: "Hugging Face",
+        empresa: "Hugging Face",
+        url: "https://huggingface.co/",
+        descripcion:
+            "Ecosistema para descubrir, compartir y utilizar modelos, datasets y aplicaciones de IA.",
+        categorias: [
+            "Programación",
+            "Investigación",
+            "Datos",
+            "Agentes de IA"
+        ],
+        especialidades: [
+            "Modelos",
+            "Datasets",
+            "Machine Learning",
+            "Código"
+        ],
+        precio: "Freemium",
+        gratuita: true,
+        api: true,
+        plataformas: [
+            "Web"
+        ],
+        potencia: 94,
+        calidad: 91,
+        versatilidad: 99,
+        facilidad: 77,
+        popularidad: 93,
+        innovacion: 97,
+        fechaActualizacion: "2026-10-04",
+        tags: [
+            "modelos",
+            "datos",
+            "codigo",
+            "investigacion"
+        ],
+        verificada: true,
+        destacada: false
+    }
+];
+
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+
+function $(selector) {
+    return document.querySelector(selector);
+}
+
+function $$(selector) {
+    return [...document.querySelectorAll(selector)];
+}
+
+function initials(name) {
+
+    return name
+        .split(/\s+/)
+        .map(word => word[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+}
+
+function stars(score) {
+
+    const count = Math.max(
+        1,
+        Math.min(5, Math.round(score / 20))
+    );
+
+    return "★".repeat(count) +
+           "☆".repeat(5 - count);
+}
+
+
+/* ============================================================
+   SCORE
+   ============================================================ */
+
+function calcularScore(ia) {
+
+    return Math.round(
+
+        (ia.potencia || 0) * SCORE_WEIGHTS.potencia +
+
+        (ia.calidad || 0) * SCORE_WEIGHTS.calidad +
+
+        (ia.versatilidad || 0) * SCORE_WEIGHTS.versatilidad +
+
+        (ia.popularidad || 0) * SCORE_WEIGHTS.popularidad +
+
+        (ia.innovacion || 0) * SCORE_WEIGHTS.innovacion +
+
+        (ia.facilidad || 0) * SCORE_WEIGHTS.facilidad
+
+    );
+}
+
+
+/* ============================================================
+   DATOS
+   ============================================================ */
+
+function loadCustomIA() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(STORAGE.custom) || "[]"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "No se pudieron cargar las IA personalizadas.",
+            error
+        );
+
+        return [];
+    }
+}
+
+
+function saveCustomIA(data) {
+
+    localStorage.setItem(
+        STORAGE.custom,
+        JSON.stringify(data)
+    );
+}
+
+
+function obtenerTodasLasIA() {
+
+    const custom = loadCustomIA();
+
+    return [
+        ...iaDatabase,
+        ...custom
+    ].map(ia => ({
+        ...ia,
+        score: calcularScore(ia)
+    }));
+}
+
+
+/* ============================================================
+   FAVORITOS
+   ============================================================ */
+
+function cargarFavoritos() {
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(STORAGE.favorites) || "[]"
+        );
+
+    } catch {
+
+        return [];
+    }
+}
+
+
+function guardarFavoritos(favoritos) {
+
+    localStorage.setItem(
+        STORAGE.favorites,
+        JSON.stringify(favoritos)
+    );
+}
+
+
+function esFavorito(id) {
+
+    return cargarFavoritos().includes(id);
+}
+
+
+function guardarFavorito(id) {
+
+    let favoritos = cargarFavoritos();
+
+    if (!favoritos.includes(id)) {
+
+        favoritos.push(id);
+
+    } else {
+
+        favoritos =
+            favoritos.filter(item => item !== id);
+    }
+
+    guardarFavoritos(favoritos);
+
+    renderAll();
+}
+
+
+function eliminarFavorito(id) {
+
+    let favoritos = cargarFavoritos();
+
+    favoritos =
+        favoritos.filter(item => item !== id);
+
+    guardarFavoritos(favoritos);
+
+    renderAll();
+}
+
+
+/* ============================================================
+   BÚSQUEDA
+   ============================================================ */
+
+function buscarIA(query) {
+
+    const q = String(query || "")
+        .toLowerCase()
+        .trim();
+
+    if (!q) {
+
+        return obtenerTodasLasIA();
+    }
+
+    return obtenerTodasLasIA().filter(ia => {
+
+        const contenido = [
+
+            ia.nombre,
+            ia.empresa,
+            ia.descripcion,
+            ...(ia.categorias || []),
+            ...(ia.especialidades || []),
+            ...(ia.tags || [])
+
+        ]
+        .join(" ")
+        .toLowerCase();
+
+        return contenido.includes(q);
+    });
+}
+
+
+/* ============================================================
+   FILTROS
+   ============================================================ */
+
+function filtrarIA(lista, filtros = {}) {
+
+    return lista.filter(ia => {
+
+        if (
+            filtros.precio &&
+            ia.precio !== filtros.precio
+        ) {
+            return false;
+        }
+
+        if (
+            filtros.categoria &&
+            !ia.categorias.includes(filtros.categoria)
+        ) {
+            return false;
+        }
+
+        if (
+            filtros.gratuita !== undefined &&
+            ia.gratuita !== filtros.gratuita
+        ) {
+            return false;
+        }
+
+        if (
+            filtros.api !== undefined &&
+            ia.api !== filtros.api
+        ) {
+            return false;
+        }
+
+        if (filtros.funcion) {
+
+            const funcion =
+                filtros.funcion.toLowerCase();
+
+            const existe =
+                [
+                    ...(ia.tags || []),
+                    ...(ia.especialidades || [])
+                ]
+                .join(" ")
+                .toLowerCase()
+                .includes(funcion);
+
+            if (!existe) {
+
+                return false;
+            }
+        }
+
+        return true;
+    });
+}
+
+
+/* ============================================================
+   ORDENAMIENTO
+   ============================================================ */
+
+function ordenarIA(lista, criterio = "score") {
+
+    const copia = [...lista];
+
+    switch (criterio) {
+
+        case "az":
+
+            return copia.sort(
+                (a, b) =>
+                    a.nombre.localeCompare(b.nombre)
+            );
+
+        case "za":
+
+            return copia.sort(
+                (a, b) =>
+                    b.nombre.localeCompare(a.nombre)
+            );
+
+        case "popularidad":
+
+            return copia.sort(
+                (a, b) =>
+                    b.popularidad - a.popularidad
+            );
+
+        case "potencia":
+
+            return copia.sort(
+                (a, b) =>
+                    b.potencia - a.potencia
+            );
+
+        case "calidad":
+
+            return copia.sort(
+                (a, b) =>
+                    b.calidad - a.calidad
+            );
+
+        case "fecha":
+
+            return copia.sort(
+                (a, b) =>
+                    b.fechaActualizacion
+                    .localeCompare(a.fechaActualizacion)
+            );
+
+        default:
+
+            return copia.sort(
+                (a, b) =>
+                    b.score - a.score
+            );
+    }
+}
+
+
+/* ============================================================
+   MATCH SCORE
+   ============================================================ */
+
+const KEYWORDS = {
+
+    programacion: [
+        "programar",
+        "programación",
+        "codigo",
+        "código",
+        "software",
+        "web",
+        "javascript",
+        "python",
+        "app",
+        "aplicacion",
+        "aplicación"
+    ],
+
+    imagen: [
+        "imagen",
+        "dibujo",
+        "logo",
+        "arte",
+        "diseño",
+        "foto",
+        "fotografia",
+        "fotografía"
+    ],
+
+    video: [
+        "video",
+        "vídeo",
+        "animacion",
+        "animación",
+        "pelicula",
+        "película"
+    ],
+
+    audio: [
+        "audio",
+        "voz",
+        "musica",
+        "música",
+        "podcast"
+    ],
+
+    datos: [
+        "datos",
+        "excel",
+        "sql",
+        "estadistica",
+        "estadística",
+        "grafico",
+        "gráfico",
+        "analisis",
+        "análisis"
+    ],
+
+    investigacion: [
+        "investigar",
+        "investigación",
+        "fuentes",
+        "estudiar",
+        "buscar",
+        "documentos",
+        "informe"
+    ],
+
+    educacion: [
+        "estudiar",
+        "educación",
+        "aprender",
+        "curso",
+        "examen",
+        "universidad"
+    ],
+
+    marketing: [
+        "marketing",
+        "publicidad",
+        "campaña",
+        "redes",
+        "contenido"
+    ],
+
+    automatizacion: [
+        "automatizar",
+        "automatización",
+        "workflow",
+        "flujo",
+        "proceso"
+    ],
+
+    ciberseguridad: [
+        "seguridad",
+        "ciberseguridad",
+        "malware",
+        "vulnerabilidad",
+        "phishing"
+    ]
+};
+
+
+function calcularMatch(ia, consulta, opciones = {}) {
+
+    const q = String(consulta || "")
+        .toLowerCase();
+
+    if (!q.trim()) {
+
+        return 0;
+    }
+
+    let score = 0;
+
+    const palabras =
+        q
+            .split(/[^a-záéíóúüñ0-9]+/)
+            .filter(Boolean);
+
+    const contenido = [
+
+        ia.nombre,
+        ia.empresa,
+        ia.descripcion,
+        ...(ia.categorias || []),
+        ...(ia.especialidades || []),
+        ...(ia.tags || [])
+
+    ]
+    .join(" ")
+    .toLowerCase();
+
+
+    palabras.forEach(palabra => {
+
+        if (contenido.includes(palabra)) {
+
+            score += 12;
+        }
+    });
+
+
+    Object.entries(KEYWORDS)
+        .forEach(([categoria, palabrasClave]) => {
+
+            const detectada =
+                palabrasClave.some(
+                    palabra =>
+                        q.includes(palabra)
+                );
+
+            if (!detectada) {
+                return;
+            }
+
+            const coincide =
+                ia.categorias.some(
+                    cat =>
+                        cat
+                            .toLowerCase()
+                            .includes(categoria)
+                );
+
+            if (coincide) {
+
+                score += 30;
+            }
+        });
+
+
+    if (
+        opciones.precio &&
+        ia.precio === opciones.precio
+    ) {
+
+        score += 15;
+    }
+
+
+    if (opciones.prioridad === "Potencia") {
+
+        score += ia.potencia / 10;
+    }
+
+    if (opciones.prioridad === "Calidad") {
+
+        score += ia.calidad / 10;
+    }
+
+    if (opciones.prioridad === "Facilidad") {
+
+        score += ia.facilidad / 10;
+    }
+
+    if (
+        opciones.prioridad === "Precio" &&
+        ia.gratuita
+    ) {
+
+        score += 10;
+    }
+
+
+    return Math.min(
+        99,
+        Math.max(
+            35,
+            Math.round(
+                Math.min(100, score)
+            )
+        )
+    );
+}
+
+
+/* ============================================================
+   RECOMENDADOR
+   ============================================================ */
+
+function obtenerRecomendaciones(
+    consulta,
+    opciones = {}
+) {
+
+    return obtenerTodasLasIA()
+
+        .map(ia => ({
+
+            ...ia,
+
+            match:
+                calcularMatch(
+                    ia,
+                    consulta,
+                    opciones
+                )
+
+        }))
+
+        .sort(
+            (a, b) =>
+                b.match - a.match ||
+                b.score - a.score
+        )
+
+        .slice(0, 5);
+}
+
+
+/* ============================================================
+   ALTERNATIVAS
+   ============================================================ */
+
+function obtenerAlternativas(iaId) {
+
+    const todas =
+        obtenerTodasLasIA();
+
+    const ia =
+        todas.find(
+            item => item.id === iaId
+        );
+
+    if (!ia) {
+
+        return [];
+    }
+
+    return todas
+
+        .filter(item => {
+
+            if (item.id === ia.id) {
+
+                return false;
+            }
+
+            return item.categorias.some(
+                categoria =>
+                    ia.categorias.includes(categoria)
+            );
+        })
+
+        .sort(
+            (a, b) =>
+                b.score - a.score
+        )
+
+        .slice(0, 6);
+}
+
+
+/* ============================================================
+   TARJETA
+   ============================================================ */
+
+function crearCard(ia) {
+
+    const favorita =
+        esFavorito(ia.id);
+
+    const seleccionada =
+        selectedForComparison.has(ia.id);
+
+    return `
+
+        <article class="card">
+
+            <div class="cardtop">
+
+                <div class="logo">
+                    ${initials(ia.nombre)}
+                </div>
+
+                <div class="score">
+                    ${ia.score}/100
+                </div>
+
+            </div>
+
+
+            <h3>
+                ${ia.nombre}
+            </h3>
+
+
+            <div class="company">
+                ${ia.empresa}
+
+                ${
+                    ia.verificada
+                        ? " ✓"
+                        : ""
+                }
+            </div>
+
+
+            <div class="stars">
+                ${stars(ia.score)}
+            </div>
+
+
+            <p>
+                ${ia.descripcion}
+            </p>
+
+
+            <div class="tags">
+
+                ${
+                    ia.categorias
+                        .slice(0, 3)
+                        .map(
+                            categoria =>
+                                `<span class="tag">
+                                    ${categoria}
+                                </span>`
+                        )
+                        .join("")
+                }
+
+                <span class="tag">
+                    💰 ${ia.precio}
+                </span>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    onclick="mostrarDetalle('${ia.id}')"
+                >
+                    VER
+                </button>
+
+
+                <button
+                    onclick="toggleComparacion('${ia.id}')"
+                >
+                    ${
+                        seleccionada
+                            ? "✓ SELECCIONADA"
+                            : "COMPARAR"
+                    }
+                </button>
+
+
+                <button
+                    onclick="guardarFavorito('${ia.id}')"
+                >
+                    ${
+                        favorita
+                            ? "★"
+                            : "☆"
+                    }
+                    FAVORITO
+                </button>
+
+            </div>
+
+        </article>
+    `;
+}
+
+
+/* ============================================================
+   RENDER GRID
+   ============================================================ */
+
+function renderizarIA(
+    elementoId,
+    lista
+) {
+
+    const elemento =
+        document.getElementById(
+            elementoId
+        );
+
+    if (!elemento) {
+        return;
+    }
+
+    if (!lista.length) {
+
+        elemento.innerHTML = `
+            <div class="empty">
+                No hay resultados para
+                los criterios actuales.
+            </div>
+        `;
+
+        return;
+    }
+
+    elemento.innerHTML =
+        lista
+            .map(crearCard)
+            .join("");
+}
+
+
+/* ============================================================
+   ESTADÍSTICAS
+   ============================================================ */
+
+function renderizarEstadisticas() {
+
+    const elemento =
+        $("#stats");
+
+    if (!elemento) {
+        return;
+    }
+
+    const todas =
+        obtenerTodasLasIA();
+
+    const categorias =
+        new Set(
+            todas.flatMap(
+                ia => ia.categorias
+            )
+        );
+
+    elemento.innerHTML = `
+
+        <div class="stat">
+            <strong>${todas.length}</strong>
+            <span>IA registradas</span>
+        </div>
+
+        <div class="stat">
+            <strong>${categorias.size}</strong>
+            <span>Categorías</span>
+        </div>
+
+        <div class="stat">
+            <strong>
+                ${todas.filter(
+                    ia => ia.gratuita
+                ).length}
+            </strong>
+            <span>IA gratuitas</span>
+        </div>
+
+        <div class="stat">
+            <strong>
+                ${todas.filter(
+                    ia => ia.api
+                ).length}
+            </strong>
+            <span>IA con API</span>
+        </div>
+
+        <div class="stat">
+            <strong>
+                ${todas.filter(
+                    ia => ia.destacada
+                ).length}
+            </strong>
+            <span>IA destacadas</span>
+        </div>
+    `;
+}
+
+
+/* ============================================================
+   CATEGORÍAS
+   ============================================================ */
+
+function renderizarCategorias() {
+
+    const elemento =
+        $("#categoryGrid");
+
+    if (!elemento) {
+        return;
+    }
+
+    const todas =
+        obtenerTodasLasIA();
+
+    const categorias =
+        [
+            ...new Set(
+                todas.flatMap(
+                    ia => ia.categorias
+                )
+            )
+        ].sort();
+
+    elemento.innerHTML =
+        categorias
+            .map(categoria => `
+
+                <button
+                    class="cat"
+                    onclick="seleccionarCategoria('${categoria}')"
+                >
+
+                    ${categoria}
+
+                    <br>
+
+                    <small class="muted">
+                        ${
+                            todas.filter(
+                                ia =>
+                                    ia.categorias
+                                        .includes(categoria)
+                            ).length
+                        }
+                        herramientas
+                    </small>
+
+                </button>
+
+            `)
+            .join("");
+
+
+    const selector =
+        $("#categoryFilter");
+
+    if (selector) {
+
+        selector.innerHTML =
+            `<option value="">
+                Categoría
+            </option>` +
+
+            categorias
+                .map(
+                    categoria =>
+                        `<option>
+                            ${categoria}
+                        </option>`
+                )
+                .join("");
+    }
+}
+
+
+/* ============================================================
+   RANKING
+   ============================================================ */
+
+function obtenerRanking() {
+
+    return ordenarIA(
+        obtenerTodasLasIA(),
+        "score"
+    );
+}
+
+
+function renderizarRanking() {
+
+    renderizarIA(
+        "topGrid",
+        obtenerRanking().slice(0, 4)
+    );
+}
+
+
+/* ============================================================
+   IA GRATUITAS
+   ============================================================ */
+
+function renderizarGratuitas() {
+
+    const gratuitas =
+        obtenerTodasLasIA()
+            .filter(
+                ia => ia.gratuita === true
+            );
+
+    renderizarIA(
+        "freeGrid",
+        ordenarIA(
+            gratuitas,
+            "score"
+        ).slice(0, 4)
+    );
+}
+
+
+/* ============================================================
+   IA NUEVAS
+   ============================================================ */
+
+function renderizarNuevas() {
+
+    renderizarIA(
+        "newGrid",
+        ordenarIA(
+            obtenerTodasLasIA(),
+            "fecha"
+        ).slice(0, 4)
+    );
+}
+
+
+/* ============================================================
+   TENDENCIAS
+   ============================================================ */
+
+function renderizarTendencias() {
+
+    renderizarIA(
+        "trendGrid",
+        ordenarIA(
+            obtenerTodasLasIA(),
+            "popularidad"
+        ).slice(0, 4)
+    );
+}
+
+
+/* ============================================================
+   FAVORITOS
+   ============================================================ */
+
+function renderizarFavoritos() {
+
+    const favoritos =
+        cargarFavoritos();
+
+    const lista =
+        obtenerTodasLasIA()
+            .filter(
+                ia =>
+                    favoritos.includes(ia.id)
+            );
+
+    renderizarIA(
+        "favoriteGrid",
+        lista
+    );
+}
+
+
+/* ============================================================
+   IA DESTACADA
+   ============================================================ */
+
+function renderizarDestacada() {
+
+    const elemento =
+        $("#featured");
+
+    if (!elemento) {
+        return;
+    }
+
+    const todas =
+        obtenerTodasLasIA();
+
+    const destacada =
+        todas.find(
+            ia => ia.destacada
+        ) || todas[0];
+
+    if (!destacada) {
+        return;
+    }
+
+    elemento.innerHTML = `
+
+        <div class="feature">
+
+            <div class="sectionpanel">
+
+                <div class="eyebrow">
+                    🤖 IA DESTACADA DEL DÍA
+                </div>
+
+                <h3>
+                    ${destacada.nombre}
+                </h3>
+
+                <div class="company">
+                    ${destacada.empresa}
+                </div>
+
+                <p>
+                    ${destacada.descripcion}
+                </p>
+
+                <div class="bigscore">
+                    ${destacada.score}/100
+                </div>
+
+                <div class="stars">
+                    ${stars(destacada.score)}
+                </div>
+
+                <button
+                    class="primary"
+                    onclick="mostrarDetalle('${destacada.id}')"
+                >
+                    VER IA
+                </button>
+
+            </div>
+
+
+            <div class="sectionpanel">
+
+                <h3>
+                    ¿Por qué está aquí?
+                </h3>
+
+                <p class="muted">
+
+                    Selección automática entre
+                    herramientas marcadas como
+                    destacadas.
+
+                    El ranking no representa
+                    una verdad absoluta.
+
+                </p>
+
+                <div class="tags">
+
+                    ${destacada.especialidades
+                        .map(
+                            especialidad =>
+                                `<span class="tag">
+                                    #${especialidad}
+                                </span>`
+                        )
+                        .join("")
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* ============================================================
+   RECOMENDADOR
+   ============================================================ */
+
+function renderizarRecomendacion(
+    consulta,
+    opciones = {}
+) {
+
+    const elemento =
+        $("#recommendation");
+
+    if (!elemento) {
+        return;
+    }
+
+    if (!consulta.trim()) {
+
+        elemento.innerHTML = `
+
+            <div class="empty">
+
+                Escribe una necesidad arriba
+                para recibir una recomendación.
+
+                <br><br>
+
+                Ejemplo:
+
+                <b>
+                    "Necesito analizar datos
+                    y generar gráficos"
+                </b>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    const resultados =
+        obtenerRecomendaciones(
+            consulta,
+            opciones
+        );
+
+
+    elemento.innerHTML = `
+
+        <div class="grid">
+
+            ${
+                resultados.map(
+                    (ia, index) => `
+
+                        <div class="card">
+
+                            <div class="eyebrow">
+
+                                ${
+                                    index === 0
+                                        ? "🥇 MEJOR OPCIÓN"
+                                        : index === 1
+                                            ? "🥈 ALTERNATIVA"
+                                            : "🥉 OTRA OPCIÓN"
+                                }
+
+                            </div>
+
+                            <h3>
+                                ${ia.nombre}
+                            </h3>
+
+                            <div class="bigscore">
+                                ${ia.match}%
+                            </div>
+
+                            <strong>
+                                Match Score
+                            </strong>
+
+                            <p>
+
+                                Esta herramienta
+                                coincide con tu
+                                necesidad por sus
+                                categorías,
+                                especialidades y
+                                características.
+
+                                <br><br>
+
+                                AI POWER SCORE:
+
+                                <b>
+                                    ${ia.score}/100
+                                </b>
+
+                            </p>
+
+                            <div class="actions">
+
+                                <button
+                                    onclick="mostrarDetalle('${ia.id}')"
+                                >
+                                    VER IA
+                                </button>
+
+                                <button
+                                    onclick="window.open('${ia.url}','_blank','noopener')"
+                                >
+                                    VISITAR SITIO
+                                </button>
+
+                            </div>
+
+                        </div>
+                    `
+                ).join("")
+            }
+
+        </div>
+    `;
+}
+
+
+/* ============================================================
+   DETALLE
+   ============================================================ */
+
+function mostrarDetalle(id) {
+
+    const todas =
+        obtenerTodasLasIA();
+
+    const ia =
+        todas.find(
+            item => item.id === id
+        );
+
+    if (!ia) {
+        return;
+    }
+
+
+    const similares =
+        obtenerAlternativas(id);
+
+
+    const modalBody =
+        $("#modalBody");
+
+    if (!modalBody) {
+        return;
+    }
+
+
+    modalBody.innerHTML = `
+
+        <div class="eyebrow">
+
+            ${ia.categorias.join(" · ")}
+
+        </div>
+
+
+        <h2>
+            ${ia.nombre}
+        </h2>
+
+
+        <div class="company">
+
+            ${ia.empresa}
+
+            ·
+
+            ${
+                ia.verificada
+                    ? "✓ Verificada"
+                    : "⚠ Pendiente"
+            }
+
+        </div>
+
+
+        <p>
+            ${ia.descripcion}
+        </p>
+
+
+        <div class="detailgrid">
+
+            ${[
+                "potencia",
+                "calidad",
+                "versatilidad",
+                "facilidad",
+                "popularidad",
+                "innovacion"
+            ]
+            .map(
+                criterio => `
+
+                    <div class="metric">
+
+                        <small>
+                            ${criterio.toUpperCase()}
+                        </small>
+
+                        <strong>
+                            ${ia[criterio]}/100
+                        </strong>
+
+                    </div>
+
+                `
+            )
+            .join("")}
+
+        </div>
+
+
+        <div class="metric">
+
+            <small>
+                AI POWER SCORE
+            </small>
+
+            <strong>
+
+                ${ia.score}/100
+
+                ·
+
+                ${stars(ia.score)}
+
+            </strong>
+
+        </div>
+
+
+        <p>
+
+            <b>Precio:</b>
+            ${ia.precio}
+
+            ·
+
+            <b>API:</b>
+            ${ia.api ? "Sí" : "No"}
+
+            ·
+
+            <b>Plataformas:</b>
+            ${ia.plataformas.join(", ")}
+
+        </p>
+
+
+        <p>
+
+            <b>Especialidades:</b>
+
+            ${ia.especialidades.join(", ")}
+
+        </p>
+
+
+        <h3>
+            🔄 IA similares
+        </h3>
+
+
+        <div class="tags">
+
+            ${
+                similares.length
+                    ? similares
+                        .map(
+                            similar => `
+
+                                <button
+                                    class="tag"
+                                    onclick="mostrarDetalle('${similar.id}')"
+                                >
+
+                                    ${similar.nombre}
+
+                                    ·
+
+                                    ${similar.score}
+
+                                </button>
+
+                            `
+                        )
+                        .join("")
+                    : "No disponible"
+            }
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                class="primary"
+                onclick="window.open('${ia.url}','_blank','noopener')"
+            >
+
+                VISITAR SITIO OFICIAL
+
+            </button>
+
+
+            <button
+                class="secondary"
+                onclick="guardarFavorito('${ia.id}')"
+            >
+
+                ${
+                    esFavorito(ia.id)
+                        ? "★ Quitar favorito"
+                        : "☆ Guardar favorito"
+                }
+
+            </button>
+
+        </div>
+
+    `;
+
+
+    $("#modal")
+        ?.classList
+        .add("open");
+}
+
+
+/* ============================================================
+   COMPARADOR
+   ============================================================ */
+
+function toggleComparacion(id) {
+
+    if (
+        selectedForComparison.has(id)
+    ) {
+
+        selectedForComparison.delete(id);
+
+    } else {
+
+        if (
+            selectedForComparison.size >= 5
+        ) {
+
+            alert(
+                "Puedes comparar entre 2 y 5 IA."
+            );
+
+            return;
+        }
+
+        selectedForComparison.add(id);
+    }
+
+
+    renderizarBarraComparacion();
+
+    renderizarCatalogo();
+}
+
+
+function renderizarBarraComparacion() {
+
+    const bar =
+        $("#compareBar");
+
+    if (!bar) {
+        return;
+    }
+
+    const cantidad =
+        selectedForComparison.size;
+
+
+    bar.classList.toggle(
+        "hidden",
+        cantidad === 0
+    );
+
+
+    const contador =
+        $("#compareCount");
+
+    if (contador) {
+
+        contador.textContent = `
+
+            ${cantidad}
+            seleccionada${cantidad === 1 ? "" : "s"}
+
+            ·
+
+            ${
+                cantidad < 2
+                    ? "selecciona al menos 2"
+                    : "lista para comparar"
+            }
+
+        `;
+    }
+}
+
+
+function compararIA() {
+
+    if (
+        selectedForComparison.size < 2
+    ) {
+
+        alert(
+            "Selecciona entre 2 y 5 IA."
+        );
+
+        return;
+    }
+
+
+    const todas =
+        obtenerTodasLasIA();
+
+
+    const lista =
+        [...selectedForComparison]
+            .map(
+                id =>
+                    todas.find(
+                        ia => ia.id === id
+                    )
+            )
+            .filter(Boolean);
+
+
+    const criterios = [
+        "potencia",
+        "calidad",
+        "versatilidad",
+        "popularidad",
+        "facilidad",
+        "innovacion",
+        "score"
+    ];
+
+
+    let html = `
+
+        <h2>
+            ⚖️ Comparación de IA
+        </h2>
+
+        <table class="compare-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Característica
+                    </th>
+
+                    ${
+                        lista.map(
+                            ia =>
+                                `<th>
+                                    ${ia.nombre}
+                                </th>`
+                        ).join("")
+                    }
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+    `;
+
+
+    criterios.forEach(
+        criterio => {
+
+            const max =
+                Math.max(
+                    ...lista.map(
+                        ia =>
+                            ia[criterio]
+                    )
+                );
+
+
+            html += `
+
+                <tr>
+
+                    <th>
+
+                        ${
+                            criterio === "score"
+                                ? "AI POWER SCORE"
+                                : criterio.toUpperCase()
+                        }
+
+                    </th>
+
+                    ${
+                        lista.map(
+                            ia => `
+
+                                <td
+                                    class="${
+                                        ia[criterio] === max
+                                            ? "best"
+                                            : ""
+                                    }"
+                                >
+
+                                    ${ia[criterio]}
+
+                                    ${
+                                        ia[criterio] === max
+                                            ? " ✓"
+                                            : ""
+                                    }
+
+                                </td>
+
+                            `
+                        ).join("")
+                    }
+
+                </tr>
+
+            `;
+        }
+    );
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+
+        <p class="muted">
+
+            El mejor resultado de cada
+            fila se resalta automáticamente.
+
+        </p>
+
+    `;
+
+
+    const modalBody =
+        $("#modalBody");
+
+    if (modalBody) {
+
+        modalBody.innerHTML = html;
+    }
+
+
+    $("#modal")
+        ?.classList
+        .add("open");
+}
+
+
+/* ============================================================
+   CATÁLOGO
+   ============================================================ */
+
+function aplicarFiltros() {
+
+    const search =
+        $("#globalSearch")
+            ?.value
+            .toLowerCase()
+            .trim() || "";
+
+
+    const precio =
+        $("#priceFilter")
+            ?.value || "";
+
+
+    const categoria =
+        $("#categoryFilter")
+            ?.value || "";
+
+
+    const funcion =
+        $("#functionFilter")
+            ?.value || "";
+
+
+    const orden =
+        $("#sortFilter")
+            ?.value || "score";
+
+
+    let lista =
+        obtenerTodasLasIA();
+
+
+    if (search) {
+
+        lista =
+            buscarIA(search);
+    }
+
+
+    lista =
+        filtrarIA(
+            lista,
+            {
+                precio,
+                categoria,
+                funcion
+            }
+        );
+
+
+    lista =
+        ordenarIA(
+            lista,
+            orden
+        );
+
+
+    currentResults =
+        lista;
+
+    currentPage = 1;
+
+    renderizarCatalogo();
+}
+
+
+function renderizarCatalogo() {
+
+    const inicio =
+        (currentPage - 1) *
+        PAGE_SIZE;
+
+
+    const fin =
+        inicio + PAGE_SIZE;
+
+
+    const resultados =
+        currentResults.slice(
+            inicio,
+            fin
+        );
+
+
+    renderizarIA(
+        "catalogGrid",
+        resultados
+    );
+
+
+    const totalPaginas =
+        Math.max(
+            1,
+            Math.ceil(
+                currentResults.length /
+                PAGE_SIZE
+            )
+        );
+
+
+    const contador =
+        $("#resultCount");
+
+    if (contador) {
+
+        contador.textContent = `
+
+            ${currentResults.length}
+            resultados · página
+            ${currentResults.length ? currentPage : 0}
+            de
+            ${totalPaginas}
+
+        `;
+    }
+
+
+    renderizarPaginacion(
+        totalPaginas
+    );
+}
+
+
+/* ============================================================
+   PAGINACIÓN
+   ============================================================ */
+
+function renderizarPaginacion(
+    totalPaginas
+) {
+
+    const elemento =
+        $("#pagination");
+
+    if (!elemento) {
+        return;
+    }
+
+
+    let html = "";
+
+
+    for (
+        let i = 1;
+        i <= totalPaginas;
+        i++
+    ) {
+
+        html += `
+
+            <button
+                class="pagebtn ${
+                    i === currentPage
+                        ? "active"
+                        : ""
+                }"
+                onclick="irPagina(${i})"
+            >
+
+                ${i}
+
+            </button>
+
+        `;
+    }
+
+
+    elemento.innerHTML =
+        html;
+}
+
+
+function irPagina(numero) {
+
+    currentPage =
+        numero;
+
+    renderizarCatalogo();
+
+
+    $("#explorar")
+        ?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+}
+
+
+/* ============================================================
+   CATEGORÍAS
+   ============================================================ */
+
+function seleccionarCategoria(
+    categoria
+) {
+
+    const selector =
+        $("#categoryFilter");
+
+    if (selector) {
+
+        selector.value =
+            categoria;
+    }
+
+
+    const search =
+        $("#globalSearch");
+
+    if (search) {
+
+        search.value = "";
+    }
+
+
+    aplicarFiltros();
+
+
+    $("#explorar")
+        ?.scrollIntoView({
+            behavior: "smooth"
+        });
+}
+
+
+/* ============================================================
+   TEMA
+   ============================================================ */
+
+function inicializarTema() {
+
+    const tema =
+        localStorage.getItem(
+            STORAGE.theme
+        );
+
+
+    if (
+        tema === "light"
+    ) {
+
+        document.body
+            .classList
+            .add("light");
+    }
+
+
+    actualizarBotonTema();
+}
+
+
+function cambiarTema() {
+
+    document.body
+        .classList
+        .toggle("light");
+
+
+    const nuevoTema =
+        document.body
+            .classList
+            .contains("light")
+            ? "light"
+            : "dark";
+
+
+    localStorage.setItem(
+        STORAGE.theme,
+        nuevoTema
+    );
+
+
+    actualizarBotonTema();
+}
+
+
+function actualizarBotonTema() {
+
+    const boton =
+        $("#themeBtn");
+
+    if (!boton) {
+        return;
+    }
+
+
+    boton.textContent =
+        document.body
+            .classList
+            .contains("light")
+            ? "☀️"
+            : "🌙";
+}
+
+
+/* ============================================================
+   IMPORTACIÓN / EXPORTACIÓN
+   ============================================================ */
+
+function exportarCatalogo() {
+
+    const datos =
+        obtenerTodasLasIA();
+
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    datos,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:
+                    "application/json"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const enlace =
+        document.createElement("a");
+
+
+    enlace.href =
+        url;
+
+    enlace.download =
+        "ai-world-hub.json";
+
+
+    enlace.click();
+
+
+    URL.revokeObjectURL(
+        url
+    );
+}
+
+
+async function importarCatalogo(
+    archivo
+) {
+
+    if (!archivo) {
+
+        throw new Error(
+            "No se seleccionó ningún archivo."
+        );
+    }
+
+
+    const texto =
+        await archivo.text();
+
+
+    const datos =
+        JSON.parse(texto);
+
+
+    if (!Array.isArray(datos)) {
+
+        throw new Error(
+            "El JSON debe contener un array."
+        );
+    }
+
+
+    const existentes =
+        loadCustomIA();
+
+
+    const nuevos =
+        datos.filter(
+            item =>
+                item.id &&
+                !existentes.some(
+                    existente =>
+                        existente.id === item.id
+                )
+        );
+
+
+    saveCustomIA(
+        [
+            ...existentes,
+            ...nuevos
+        ]
+    );
+
+
+    customIA =
+        loadCustomIA();
+
+
+    renderAll();
+
+
+    return nuevos.length;
+}
+
+
+/* ============================================================
+   IA DEL DÍA
+   ============================================================ */
+
+function obtenerIAAleatoria() {
+
+    const todas =
+        obtenerTodasLasIA();
+
+    if (!todas.length) {
+        return null;
+    }
+
+
+    const indice =
+        Math.floor(
+            Math.random() *
+            todas.length
+        );
+
+
+    return todas[indice];
+}
+
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+function cerrarModal() {
+
+    $("#modal")
+        ?.classList
+        .remove("open");
+}
+
+
+function cerrarModalGuiado() {
+
+    $("#guidedModal")
+        ?.classList
+        .remove("open");
+}
+
+
+/* ============================================================
+   RECOMENDADOR GUIADO
+   ============================================================ */
+
+function ejecutarRecomendadorGuiado() {
+
+    const necesidad =
+        $("#guidedNeed")
+            ?.value
+            .trim();
+
+
+    if (!necesidad) {
+
+        alert(
+            "Describe qué quieres conseguir."
+        );
+
+        return;
+    }
+
+
+    const precio =
+        $("#guidedPrice")
+            ?.value || "";
+
+
+    const prioridad =
+        $("#guidedPriority")
+            ?.value || "";
+
+
+    cerrarModalGuiado();
+
+
+    const mainSearch =
+        $("#mainSearch");
+
+    if (mainSearch) {
+
+        mainSearch.value =
+            necesidad;
+    }
+
+
+    renderizarRecomendacion(
+        necesidad,
+        {
+            precio,
+            prioridad
+        }
+    );
+
+
+    $("#recomendador")
+        ?.scrollIntoView({
+            behavior: "smooth"
+        });
+}
+
+
+/* ============================================================
+   RENDER GENERAL
+   ============================================================ */
+
+function renderAll() {
+
+    renderizarEstadisticas();
+
+    renderizarCategorias();
+
+    renderizarRanking();
+
+    renderizarGratuitas();
+
+    renderizarNuevas();
+
+    renderizarTendencias();
+
+    renderizarFavoritos();
+
+    renderizarDestacada();
+
+    aplicarFiltros();
+
+    renderizarBarraComparacion();
+}
+
+
+/* ============================================================
+   EVENTOS
+   ============================================================ */
+
+function inicializarEventos() {
+
+    const recommendBtn =
+        $("#recommendBtn");
+
+    if (recommendBtn) {
+
+        recommendBtn.addEventListener(
+            "click",
+            () => {
+
+                const consulta =
+                    $("#mainSearch")
+                        ?.value
+                        .trim() || "";
+
+
+                renderizarRecomendacion(
+                    consulta
+                );
+            }
+        );
+    }
+
+
+    const mainSearch =
+        $("#mainSearch");
+
+    if (mainSearch) {
+
+        mainSearch.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    renderizarRecomendacion(
+                        mainSearch.value
+                    );
+                }
+            }
+        );
+    }
+
+
+    const globalSearch =
+        $("#globalSearch");
+
+    if (globalSearch) {
+
+        globalSearch.addEventListener(
+            "input",
+            aplicarFiltros
+        );
+    }
+
+
+    [
+        "priceFilter",
+        "categoryFilter",
+        "functionFilter",
+        "sortFilter"
+    ]
+    .forEach(id => {
+
+        const elemento =
+            $("#" + id);
+
+        if (elemento) {
+
+            elemento.addEventListener(
+                "change",
+                aplicarFiltros
+            );
+        }
+    });
+
+
+    $("#freeBtn")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                const filtro =
+                    $("#priceFilter");
+
+                if (filtro) {
+
+                    filtro.value =
+                        "Gratis";
+                }
+
+                aplicarFiltros();
+
+                $("#explorar")
+                    ?.scrollIntoView({
+                        behavior: "smooth"
+                    });
+            }
+        );
+
+
+    $("#themeBtn")
+        ?.addEventListener(
+            "click",
+            cambiarTema
+        );
+
+
+    $("#scoreInfo")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                alert(
+
+                    "AI POWER SCORE\n\n" +
+
+                    "Potencia: 25%\n" +
+                    "Calidad: 20%\n" +
+                    "Versatilidad: 20%\n" +
+                    "Popularidad: 15%\n" +
+                    "Innovación: 10%\n" +
+                    "Facilidad: 10%\n\n" +
+
+                    "El resultado es un " +
+                    "indicador orientativo."
+
+                );
+            }
+        );
+
+
+    $("#clearCompare")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                selectedForComparison
+                    .clear();
+
+                renderizarBarraComparacion();
+
+                renderizarCatalogo();
+            }
+        );
+
+
+    $("#compareBtn")
+        ?.addEventListener(
+            "click",
+            compararIA
+        );
+
+
+    $("#closeModal")
+        ?.addEventListener(
+            "click",
+            cerrarModal
+        );
+
+
+    $("#closeGuided")
+        ?.addEventListener(
+            "click",
+            cerrarModalGuiado
+        );
+
+
+    $("#guidedBtn")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                $("#guidedModal")
+                    ?.classList
+                    .add("open");
+            }
+        );
+
+
+    $("#guidedRecommend")
+        ?.addEventListener(
+            "click",
+            ejecutarRecomendadorGuiado
+        );
+
+
+    $("#modal")
+        ?.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    $("#modal")
+                ) {
+
+                    cerrarModal();
+                }
+            }
+        );
+
+
+    $("#guidedModal")
+        ?.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    $("#guidedModal")
+                ) {
+
+                    cerrarModalGuiado();
+                }
+            }
+        );
+
+
+    $$("[data-scroll]")
+        .forEach(
+            boton => {
+
+                boton.addEventListener(
+                    "click",
+                    () => {
+
+                        const destino =
+                            document.getElementById(
+                                boton.dataset.scroll
+                            );
+
+                        destino?.scrollIntoView({
+                            behavior: "smooth"
+                        });
+                    }
+                );
+            }
+        );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                cerrarModal();
+
+                cerrarModalGuiado();
+            }
+        }
+    );
+}
+
+
+/* ============================================================
+   INICIALIZACIÓN
+   ============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        inicializarTema();
+
+        inicializarEventos();
+
+        renderAll();
+
+        console.log(
+            "AI WORLD HUB iniciado correctamente."
+        );
+
+        console.log(
+            "IA disponibles:",
+            obtenerTodasLasIA().length
+        );
+    }
+);
+
+
+/* ============================================================
+   FUNCIONES GLOBALES
+   Necesarias para los onclick del HTML
+   ============================================================ */
+
+window.mostrarDetalle =
+    mostrarDetalle;
+
+window.guardarFavorito =
+    guardarFavorito;
+
+window.eliminarFavorito =
+    eliminarFavorito;
+
+window.toggleComparacion =
+    toggleComparacion;
+
+window.seleccionarCategoria =
+    seleccionarCategoria;
+
+window.irPagina =
+    irPagina;
+
+window.compararIA =
+    compararIA;
+
+window.exportarCatalogo =
+    exportarCatalogo;
+
+window.importarCatalogo =
+    importarCatalogo;
+
+window.renderAll =
+    renderAll;
+```
