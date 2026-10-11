@@ -103,7 +103,8 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-dro-005", id: "DRO-005", solapa: "Drogas", nombre: "Omisión de Registro de Drogas Específicas Involucradas", indicador: "SUSTANCIAS / DROGAS ESPECÍFICAS", mensaje: "Falta agregar o clasificar la sustancia específica involucrada en el hecho habiéndose constatado el secuestro o presencia de estupefacientes.", tipo: "SISTEMA" },
 
     { uuid: "sys-err-001", id: "ERR-001", solapa: "Errores Varios", nombre: "Cuadrante", indicador: "CUADRANTE INCORRECTO", mensaje: "Se devuelve para la corrección del Cuadrante.", tipo: "SISTEMA" },
-    { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Solapa incorrecta", indicador: "SOLAPA INCORRECTA / FALTANTE", mensaje: "La solapa correspondiente no se corresponde al evento.", tipo: "SISTEMA" }
+    { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Clasificador Primario Incorrecto", indicador: "CLASIFICADOR PRIMARIO INCORRECTO", mensaje: "El Clasificador Primario seleccionado no se corresponde al evento.", tipo: "SISTEMA" },
+    { uuid: "sys-err-003", id: "ERR-003", solapa: "Errores Varios", nombre: "Clasificador Primario Omitido", indicador: "CLASIFICADOR PRIMARIO FALTANTE", mensaje: "Faltante de Clasificador Primario. Se omite agregar clasificador primario para habilitar solapa correspondiente al evento.", tipo: "SISTEMA" }
 ];
 
 const SOLAPAS_PREDETERMINADAS = [
