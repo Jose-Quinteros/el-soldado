@@ -23,7 +23,9 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-lug-006", id: "LUG-006", solapa: "Lugar", nombre: "Control Lugar", indicador: "DESCRIPCIÓN DE LUGAR", mensaje: "Verificar si el lugar corresponde a una de las descripciones solicitadas, por ejemplo urbana, intradomiciliaria, entre otras.", tipo: "SISTEMA" },
     { uuid: "sys-lug-007", id: "LUG-007", solapa: "Lugar", nombre: "Dependencia Actuante", indicador: "JURISDICCIÓN POLICIAL", mensaje: "Inconsistencia entre la localidad asignada y la comisaría seleccionada.", tipo: "SISTEMA" },
     { uuid: "sys-lug-008", id: "LUG-008", solapa: "Lugar", nombre: "Rango Horario del Evento", indicador: "RANGO TEMPORAL DEL EVENTO", mensaje: "El espacio temporal del Inicio y la Finalización del Evento registran exactamente el mismo valor, exclusivo para eventos especificos, generando una duración de cero minutos.", tipo: "SISTEMA" },
-
+    { uuid: "sys-lug-009", id: "LUG-009", solapa: "Lugar", nombre: "Discrepancia en la Fecha del Evento respecto al Relato", indicador: "FECHA DEL HECHO VS RELATO", mensaje: "La fecha registrada en la solapa Lugar no coincide con el día de ocurrencia del suceso explicitado en la narrativa.", tipo: "SISTEMA" },
+    { uuid: "sys-lug-010", id: "LUG-010", solapa: "Lugar", nombre: "Incongruencia en el Horario Clasificado respecto al Relato", indicador: "HORARIO DEL HECHO VS RELATO", mensaje: "El rango u hora consignada en el registro no se corresponde con el horario exacto o aproximado mencionado en el cuerpo de la síntesis del hecho.", tipo: "SISTEMA" },
+    
     { uuid: "sys-car-001", id: "CAR-001", solapa: "Carátula", nombre: "Subtipificación o Degradación del Delito Principal", indicador: "TIPO DE DELITO / TIPICIDAD", mensaje: "Se clasificó un delito menor o no violento cuando en el relato constan elementos de violencia o coerción física", tipo: "SISTEMA" },
     { uuid: "sys-car-002", id: "CAR-002", solapa: "Carátula", nombre: "Omisión de Agravantes o Calificantes Requeridas", indicador: "AGRAVANTES / CALIFICANTES DEL HECHO", mensaje: "No se registró el agravante correspondiente a pesar de que el relato menciona (Ej. el uso de armas, la participación de menores, la nocturnidad o la comisión en banda.)", tipo: "SISTEMA" },
     { uuid: "sys-car-003", id: "CAR-003", solapa: "Carátula", nombre: "Inconsistencia en el Estado de Consumación", indicador: "GRADO DE TENTATIVA O CONSUMADO", mensaje: "El hecho se clasificó como 'Tentativa' pero se declararon bienes o elementos efectivamente apoderados/sustraídos (o viceversa).", tipo: "SISTEMA" },
@@ -103,8 +105,9 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-dro-005", id: "DRO-005", solapa: "Drogas", nombre: "Omisión de Registro de Drogas Específicas Involucradas", indicador: "SUSTANCIAS / DROGAS ESPECÍFICAS", mensaje: "Falta agregar o clasificar la sustancia específica involucrada en el hecho habiéndose constatado el secuestro o presencia de estupefacientes.", tipo: "SISTEMA" },
 
     { uuid: "sys-err-001", id: "ERR-001", solapa: "Errores Varios", nombre: "Cuadrante", indicador: "CUADRANTE INCORRECTO", mensaje: "Se devuelve para la corrección del Cuadrante.", tipo: "SISTEMA" },
-    { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Clasificador Primario Incorrecto", indicador: "CLASIFICADOR PRIMARIO INCORRECTO", mensaje: "El Clasificador Primario seleccionado no se corresponde al evento.", tipo: "SISTEMA" },
-    { uuid: "sys-err-003", id: "ERR-003", solapa: "Errores Varios", nombre: "Clasificador Primario Omitido", indicador: "CLASIFICADOR PRIMARIO FALTANTE", mensaje: "Faltante de Clasificador Primario. Se omite agregar clasificador primario para habilitar solapa correspondiente al evento.", tipo: "SISTEMA" }
+    { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Clasificador Primario Incorrecto según la Naturaleza del Hecho", indicador: "ASIGNACIÓN DE CLASIFICADOR PRIMARIO", mensaje: "El clasificador primario asignado no guarda relación técnica con la tipología ni con la dinámica del hecho analizado.", tipo: "SISTEMA" },
+    { uuid: "sys-err-003", id: "ERR-003", solapa: "Errores Varios", nombre: "Omisión de Clasificador Primario por Ajuste de Criterio", indicador: "OMISIÓN DE CLASIFICADOR PRIMARIO", mensaje: "Se omitió seleccionar el clasificador primario correspondiente, forzando u omitiendo los criterios normativos de clasificación del evento.", tipo: "SISTEMA" }
+
 ];
 
 const SOLAPAS_PREDETERMINADAS = [
