@@ -109,8 +109,9 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Clasificador Primario Incorrecto según la Naturaleza del Hecho", indicador: "ASIGNACIÓN DE CLASIFICADOR PRIMARIO", mensaje: "El clasificador primario asignado no guarda relación técnica con la tipología ni con la dinámica del hecho analizado.", tipo: "SISTEMA" },
     { uuid: "sys-err-003", id: "ERR-003", solapa: "Errores Varios", nombre: "Omisión de Clasificador Primario por Ajuste de Criterio", indicador: "OMISIÓN DE CLASIFICADOR PRIMARIO", mensaje: "Se omitió seleccionar el clasificador primario correspondiente, forzando u omitiendo los criterios normativos de clasificación del evento.", tipo: "SISTEMA" },
     { uuid: "sys-err-004", id: "ERR-004", solapa: "Errores Varios", nombre: "Evento Mal Clasificado sin Compromiso con los Parámetros del Relato", indicador: "EVENTO MAL CLASIFICADO", mensaje: "Los parámetros y variables seleccionados no guardan coherencia técnica ni se comprometen con lo expuesto en la narrativa del hecho.", tipo: "SISTEMA" },
-    { uuid: "sys-err-005", id: "ERR-005", solapa: "Errores Varios", nombre: "Discrepancia en Delitocop Requiriendo Revisión según Tipo de Hecho", indicador: "DELITOCOP VS RELATO ESPECÍFICO", mensaje: "La clasificación en Delitocop requiere revisión, dado que el relato describe un evento específico tipificado en el catálogo para esta clase de hechos.", tipo: "SISTEMA" }
-
+    { uuid: "sys-err-005", id: "ERR-005", solapa: "Errores Varios", nombre: "Discrepancia en Delitocop Requiriendo Revisión según Tipo de Hecho", indicador: "DELITOCOP VS RELATO ESPECÍFICO", mensaje: "La clasificación en Delitocop requiere revisión, dado que el relato describe un evento específico tipificado en el catálogo para esta clase de hechos.", tipo: "SISTEMA" },
+    { uuid: "sys-err-006", id: "ERR-006", solapa: "Errores Varios", nombre: "Ausencia Total de Relato Descriptivo del Evento", indicador: "OMISIÓN DE RELATO DESCRIPTIVO", mensaje: "No posee relato descriptivo. Se solicita la incorporación del relato descriptivo de los hechos para el evento de referencia. El registro actual impide el análisis criminal correspondiente. Quedo a la espera de la actualización.", tipo: "SISTEMA" }
+    
 ];
 
 const SOLAPAS_PREDETERMINADAS = [
