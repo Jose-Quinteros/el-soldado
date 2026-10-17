@@ -106,12 +106,12 @@ const ERRORES_PREDETERMINADOS = [
     { uuid: "sys-dro-004", id: "DRO-004", solapa: "Drogas", nombre: "Omisión de Coordenadas Geográficas Solicitadas", indicador: "COORDENADAS / GEOLOCALIZACIÓN DEL PROCEDIMIENTO", mensaje: "No se ingresaron las coordenadas geográficas requeridas para precisar el lugar exacto del hallazgo o procedimiento por drogas.", tipo: "SISTEMA" },
     { uuid: "sys-dro-005", id: "DRO-005", solapa: "Drogas", nombre: "Omisión de Registro de Drogas Específicas Involucradas", indicador: "SUSTANCIAS / DROGAS ESPECÍFICAS", mensaje: "Falta agregar o clasificar la sustancia específica involucrada en el hecho habiéndose constatado el secuestro o presencia de estupefacientes.", tipo: "SISTEMA" },
 
-    { uuid: "sys-err-001", id: "ERR-001", solapa: "Errores Varios", nombre: "Cuadrante", indicador: "CUADRANTE INCORRECTO", mensaje: "Se devuelve para la corrección del Cuadrante.", tipo: "SISTEMA" },
-    { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Varios", nombre: "Clasificador Primario Incorrecto según la Naturaleza del Hecho", indicador: "ASIGNACIÓN DE CLASIFICADOR PRIMARIO", mensaje: "El clasificador primario asignado no guarda relación técnica con la tipología ni con la dinámica del hecho analizado.", tipo: "SISTEMA" },
-    { uuid: "sys-err-003", id: "ERR-003", solapa: "Errores Varios", nombre: "Omisión de Clasificador Primario por Ajuste de Criterio", indicador: "OMISIÓN DE CLASIFICADOR PRIMARIO", mensaje: "Se omitió seleccionar el clasificador primario correspondiente, forzando u omitiendo los criterios normativos de clasificación del evento.", tipo: "SISTEMA" },
-    { uuid: "sys-err-004", id: "ERR-004", solapa: "Errores Varios", nombre: "Evento Mal Clasificado sin Compromiso con los Parámetros del Relato", indicador: "EVENTO MAL CLASIFICADO", mensaje: "Los parámetros y variables seleccionados no guardan coherencia técnica ni se comprometen con lo expuesto en la narrativa del hecho.", tipo: "SISTEMA" },
-    { uuid: "sys-err-005", id: "ERR-005", solapa: "Errores Varios", nombre: "Discrepancia en Delitocop Requiriendo Revisión según Tipo de Hecho", indicador: "DELITOCOP VS RELATO ESPECÍFICO", mensaje: "La clasificación en Delitocop requiere revisión, dado que el relato describe un evento específico tipificado en el catálogo para esta clase de hechos.", tipo: "SISTEMA" },
-    { uuid: "sys-err-006", id: "ERR-006", solapa: "Errores Varios", nombre: "Ausencia Total de Relato Descriptivo del Evento", indicador: "OMISIÓN DE RELATO DESCRIPTIVO", mensaje: "No posee relato descriptivo. Se solicita la incorporación del relato descriptivo de los hechos para el evento de referencia. El registro actual impide el análisis criminal correspondiente. Quedo a la espera de la actualización.", tipo: "SISTEMA" }
+    { uuid: "sys-err-001", id: "ERR-001", solapa: "Errores Especificos", nombre: "Cuadrante", indicador: "CUADRANTE INCORRECTO", mensaje: "Se devuelve para la corrección del Cuadrante.", tipo: "SISTEMA" },
+    { uuid: "sys-err-002", id: "ERR-002", solapa: "Errores Especificos", nombre: "Clasificador Primario Incorrecto según la Naturaleza del Hecho", indicador: "ASIGNACIÓN DE CLASIFICADOR PRIMARIO", mensaje: "El clasificador primario asignado no guarda relación técnica con la tipología ni con la dinámica del hecho analizado.", tipo: "SISTEMA" },
+    { uuid: "sys-err-003", id: "ERR-003", solapa: "Errores Especificos", nombre: "Omisión de Clasificador Primario por Ajuste de Criterio", indicador: "OMISIÓN DE CLASIFICADOR PRIMARIO", mensaje: "Se omitió seleccionar el clasificador primario correspondiente, forzando u omitiendo los criterios normativos de clasificación del evento.", tipo: "SISTEMA" },
+    { uuid: "sys-err-004", id: "ERR-004", solapa: "Errores Especificos", nombre: "Evento Mal Clasificado sin Compromiso con los Parámetros del Relato", indicador: "EVENTO MAL CLASIFICADO", mensaje: "Los parámetros y variables seleccionados no guardan coherencia técnica ni se comprometen con lo expuesto en la narrativa del hecho.", tipo: "SISTEMA" },
+    { uuid: "sys-err-005", id: "ERR-005", solapa: "Errores Especificos", nombre: "Discrepancia en Delitocop Requiriendo Revisión según Tipo de Hecho", indicador: "DELITOCOP VS RELATO ESPECÍFICO", mensaje: "La clasificación en Delitocop requiere revisión, dado que el relato describe un evento específico tipificado en el catálogo para esta clase de hechos.", tipo: "SISTEMA" },
+    { uuid: "sys-err-006", id: "ERR-006", solapa: "Errores Especificos", nombre: "Ausencia Total de Relato Descriptivo del Evento", indicador: "OMISIÓN DE RELATO DESCRIPTIVO", mensaje: "No posee relato descriptivo. Se solicita la incorporación del relato descriptivo de los hechos para el evento de referencia. El registro actual impide el análisis criminal correspondiente. Quedo a la espera de la actualización.", tipo: "SISTEMA" }
     
 ];
 
@@ -126,7 +126,7 @@ const SOLAPAS_PREDETERMINADAS = [
     { id: "sol-8", nombre: "Armas", tipo: "SISTEMA" },
     { id: "sol-9", nombre: "Accidente Tránsito", tipo: "SISTEMA" },
     { id: "sol-10", nombre: "Drogas", tipo: "SISTEMA" },
-    { id: "sol-11", nombre: "Errores Varios", tipo: "SISTEMA" }
+    { id: "sol-11", nombre: "Errores Especificos", tipo: "SISTEMA" }
 ];
 
 const PARTIDOS_PREDETERMINADOS = [
