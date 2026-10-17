@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mailen - Corazones Animados</title>
+    <!-- Carga de Tailwind CSS para estilos de la interfaz -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+            }
+            50% {
+                opacity: 0.9;
+                transform: translate(calc(-50% + var(--dx)), calc(-50% - 60px)) scale(1.2) rotate(var(--rot));
+            }
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--dx) * 1.5), calc(-50% - 130px)) scale(0.8) rotate(calc(var(--rot) * 1.5));
+            }
+        }
+
+        .heart-particle {
+            position: absolute;
+            pointer-events: none;
+            animation: floatUp 1.2s ease-out forwards;
+            z-index: 50;
+            user-select: none;
+            filter: drop-shadow(0 2px 4px rgba(244, 63, 94, 0.3));
+        }
+
+        /* Formato estricto solicitado: Arial 10px */
+        .text-arial-10 {
+            font-family: Arial, Helvetica, sans-serif !important;
+            font-size: 10px !important;
+            line-height: 12px !important;
+            letter-spacing: 0.5px;
+        }
+
+        .heart-badge {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .heart-badge:hover {
+            transform: scale(1.05);
+        }
+
+        .heart-badge:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 min-h-screen flex items-center justify-center p-4 antialiased select-none">
+
+    <main class="max-w-md w-full bg-white/80 backdrop-blur-md rounded-2xl p-8 shadow-xl border border-rose-100/50 text-center relative overflow-hidden">
+        
+        <!-- Elementos decorativos de fondo -->
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-pink-200/40 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-rose-200/40 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="relative z-10 space-y-6">
+            <header class="space-y-2">
+                <span class="inline-block px-3 py-1 bg-rose-100 text-rose-600 rounded-full text-xs font-medium tracking-wide">
+                    Suerte!!!
+                </span>
+                <!-- <h1 class="text-2xl font-semibold text-gray-800">¡El Amor Existe Porque Tú Existes!</h1>-->
+                <p class="text-sm text-gray-500">"Para crecer hay que dejar algo atras..."</p>
+            </header>
+
+            <div class="flex justify-center my-6">
+                <div id="interactiveArea" 
+                     class="heart-badge relative inline-flex items-center gap-2 px-6 py-4 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl shadow-lg cursor-pointer hover:shadow-rose-500/25">
+                    
+                    <svg class="w-4 h-4 text-rose-200 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+
+                    <!-- Nombre con tipografía Arial 10px exactamente como se requirió -->
+                    <span class="text-arial-10 font-bold uppercase tracking-wider text-white">
+                        Mailen
+                    </span>
+
+                    <svg class="w-4 h-4 text-rose-200 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Contador opcional para dar dinamismo -->
+            <div class="text-xs text-gray-400">
+                Corazones creados: <span id="counter" class="font-bold text-rose-500">0</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let heartCount = 0;
+        const interactiveArea = document.getElementById('interactiveArea');
+        const counterEl = document.getElementById('counter');
+
+        // Lista de colores para mayor variedad visual en los corazones
+        const colors = [
+            '#f43f5e', // rose-500
+            '#ec4899', // pink-500
+            '#e11d48', // rose-600
+            '#db2777', // pink-600
+            '#f472b6'  // pink-400
+        ];
+
+        // Función para crear partículas de corazón al hacer clic
+        function spawnHearts(e) {
+            // Determinar posición del clic (soporta eventos de mouse y touch)
+            const rect = interactiveArea.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+            // Generar ráfaga de varios corazones por cada clic
+            const numberOfHearts = 6 + Math.floor(Math.random() * 4);
+
+            for (let i = 0; i < numberOfHearts; i++) {
+                createHeart(clientX, clientY);
+            }
+
+            // Actualizar contador
+            heartCount += numberOfHearts;
+            counterEl.textContent = heartCount;
+        }
+
+        function createHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'heart-particle';
+
+            // Tamaño y desplazamientos aleatorios para efecto natural
+            const size = Math.floor(Math.random() * 16) + 14; // entre 14px y 30px
+            const dx = (Math.random() - 0.5) * 120; // desplazamiento X
+            const rot = (Math.random() - 0.5) * 60; // rotación
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            // Aplicar variables CSS personalizadas para la animación
+            heart.style.left = `${x}px`;
+            heart.style.top = `${y}px`;
+            heart.style.setProperty('--dx', `${dx}px`);
+            heart.style.setProperty('--rot', `${rot}deg`);
+
+            // Icono SVG del corazón
+            heart.innerHTML = `
+                <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="${color}">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            `;
+
+            document.body.appendChild(heart);
+
+            // Eliminar el elemento del DOM tras finalizar la animación
+            setTimeout(() => {
+                heart.remove();
+            }, 1200);
+        }
+
+        // Agregar listeners de eventos para ratón y dispositivos táctiles
+        interactiveArea.addEventListener('click', spawnHearts);
+    </script>
+</body>
+</html>
