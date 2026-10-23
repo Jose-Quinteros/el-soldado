@@ -1143,7 +1143,8 @@ const SINONIMOS_BUSQUEDA = [
     ["medio", "instrumento", "elemento"],
     ["modalidad", "modus operandi"],
     ["lugar", "sitio", "escena", "paraje"],
-    ["documento", "dni", "identidad", "filiación"]
+    ["documento", "dni", "identidad", "filiación"],
+    ["solapa", "pestaña"]
 ];
 
 const FACTOR_PESO_SINONIMO = 0.6;
